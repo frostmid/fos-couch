@@ -1,0 +1,23 @@
+{
+	"name": "node-fos-data",
+	"description": "cool data layer over couchdb",
+	"homepage": "http://futurios.org",
+	"author": {
+		"name": "Sergey Antoninko",
+		"email": "lyxsus@gmail.com"
+	},
+	"version": "0.1.1",
+	"main": "index.js",
+	"dependencies": {
+		"lodash": "0.10.x",
+		"q": "0.8.x",
+		"carrier": "0.1.x",
+		"fos-mixins": "git://github.com/lyxsus/fos-mixins.git",
+		"fos-request": "git://github.com/lyxsus/fos-request.git",
+		"fos-json-http-stream": "git://github.com/lyxsus/fos-json-http-stream.git",
+		"fos-evaluate": "git://github.com/lyxsus/fos-evaluate.git",
+		"fos-hash": "git://github.com/lyxsus/fos-hash.git",
+		"request": "2.x.x"
+	},
+	"private": true
+}
