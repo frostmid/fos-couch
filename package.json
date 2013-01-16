@@ -1,5 +1,5 @@
 {
-	"name": "fos-data",
+	"name": "fos-couch",
 	"description": "cool data layer over couchdb",
 	"homepage": "http://futurios.org",
 	"author": {
