@@ -27,23 +27,46 @@ _.extend (module.exports.prototype, {
 		this.emit ('change');
 	},
 
+	merge: function (data) {
+		this.data = _.extend (this.data, data);
+	},
+
 	get: function (key) {
 		return this.data [key];
 	},
 
 	remove: function () {
-		// TODO: Remove from database
-		/*
-		return request ({
-			method: 'DELETE',
-			url: this.url + '?rev=' + this.get ('_rev'),
-
+		return this.save ({
+			_deleted: true
 		});
-		*/
 	},
 
 	save: function () {
-		// TODO: Save data to database
+		var designDocId, data,
+			url = this.url;
+
+		if (data) this.merge (data);
+
+		if (arguments.length == 1) {
+			data = arguments [0];
+		} else {
+			data = arguments [1];
+
+			url = this.database.url + '_design/' + encodeURIComponent (arguments [0]) +
+					'/_update/' + encodeURIComponent (this.data.type) +
+					'/' + encodeURIComponent (this.data._id);
+		}
+		
+		return request ({
+			url: url,
+			accept: 'application/json',
+			method: 'PUT',
+			body: JSON.stringify (this.data),
+			headers: {
+				'content-type': 'application/json'
+			},
+			oauth: this.database.server.settings.oauth	// TODO: This should be passed from client
+		});
 	},
 
 	attach: function () {
