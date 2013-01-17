@@ -17,5 +17,11 @@
 		"fos-evaluate": "git://github.com/lyxsus/fos-evaluate.git",
 		"fos-hash": "git://github.com/lyxsus/fos-hash.git"
 	},
+	"devDependencies": {
+		"vows": "0.6.x"
+	},
+	"scripts": {
+		"test": "vows --spec"
+	},
 	"private": true
 }

@@ -1,4 +1,5 @@
 var _ = require ('lodash'),
+	Q = require ('q'),
 	querystring = require ('querystring'),
 
 	JsonHttpStream = require ('fos-json-http-stream'),
@@ -61,7 +62,12 @@ _.extend (module.exports.prototype, {
 
 		if (event.doc) {
 			if (this.documents.has (event.id)) {
-				this.documents.get (event.id).update (event.doc);
+				Q.when (this.documents.get (event.id))
+					.then (function (doc) {
+						doc.update (event.doc);
+					})
+					.fail (console.error)
+					.done ();
 			}
 
 			_.each (this.views.views, function (view) {

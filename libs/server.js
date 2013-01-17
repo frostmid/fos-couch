@@ -29,7 +29,7 @@ module.exports.prototype = {
 	},
 
 	connect: function () {
-		console.log ('* Listen for db_update notifications http stream')
+		// console.log ('* Listen for db_update notifications http stream')
 
 		request ({
 			url: this.url + '_config/http-notifications',
@@ -56,7 +56,12 @@ module.exports.prototype = {
 
 	notify: function (event) {
 		if (this.has (event.db)) {
-			this.database (event.db).notify ();
+			Q.when (this.database (event.db))
+				.then (function (database) {
+					database.notify ();
+				})
+				.fail (console.error)
+				.done ();
 		}
 	},
 

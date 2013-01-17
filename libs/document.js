@@ -45,18 +45,18 @@ _.extend (module.exports.prototype, {
 		var designDocId, data,
 			url = this.url;
 
-		if (data) this.merge (data);
-
 		if (arguments.length == 1) {
-			data = arguments [0];
+			this.merge (arguments [0]);
 		} else {
-			data = arguments [1];
+			this.merge (arguments [1]);
 
 			url = this.database.url + '_design/' + encodeURIComponent (arguments [0]) +
 					'/_update/' + encodeURIComponent (this.data.type) +
 					'/' + encodeURIComponent (this.data._id);
 		}
-		
+
+		// this.isReady = false;
+
 		return request ({
 			url: url,
 			accept: 'application/json',
@@ -66,11 +66,43 @@ _.extend (module.exports.prototype, {
 				'content-type': 'application/json'
 			},
 			oauth: this.database.server.settings.oauth	// TODO: This should be passed from client
+		})
+			.then (_.bind (this.returnNotReady, this))
+			.then (_.bind (this.ready, this));
+	},
+
+	getAttachment: function (name) {
+		return request ({
+			url: this.url + encodeURIComponent (name),
+			oauth: this.database.server.settings.oauth,
+			returnResponse: true
 		});
 	},
 
-	attach: function () {
-		// TODO: Update attachment
+	saveAttachment: function (attachment) {
+		return request ({
+			url: this.url + encodeURIComponent (attachment.name) + '?rev=' + this.get ('_rev'),
+			accept: 'application/json',
+			method: 'PUT',
+			body: attachment.body,
+			headers: {
+				'content-type': attachment.contentType
+			},
+			oauth: this.database.server.settings.oauth	// TODO: This should be passed from client
+		})
+			.fail (_.bind (this.returnError, this))
+			.then (_.bind (this.returnNotReady, this));
+	},
+
+	removeAttachment: function (name) {
+		return request ({
+			url: this.url + encodeURIComponent (name) + '?rev=' + this.get ('_rev'),
+			accept: 'application/json',
+			method: 'DELETE',
+			oauth: this.database.server.settings.oauth	// TODO: This should be passed from client
+		})
+			.fail (_.bind (this.returnError, this))
+			.then (_.bind (this.returnNotReady, this));
 	}
 });
 

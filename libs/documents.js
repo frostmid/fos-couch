@@ -40,10 +40,10 @@ _.extend (module.exports.prototype, {
 			},
 			oauth: this.database.server.settings.oauth	// TODO: Bypass client authorization tokens
 		})
-			.fail (console.error)
 			.then (_.bind (function (resp) {
 				return this.get (resp.id);
-			}, this));
+				
+			}, this))
 	},
 
 	has: function (id) {
