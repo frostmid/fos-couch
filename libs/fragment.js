@@ -69,8 +69,15 @@ _.extend (module.exports.prototype, {
 		} if (params.autoreduce) {
 			throw new Error ('Not implemented');
 		} else {
-			return request ( applyParams (this.view.url, params));
+			return request ({
+				url: applyParams (this.view.url, params),
+				accept: 'application/json'
+			});
 		}
+	},
+
+	get: function (key) {
+		return this.data [key];
 	},
 
 	update: function (data) {
