@@ -2,6 +2,7 @@ var Q = require ('q'),
 	_ = require ('lodash'),
 
 	JsonHttpStream = require ('fos-json-http-stream'),
+	mixins = require ('fos-mixins'),
 	request = require ('fos-request')
 
 	Database = require ('./database');
@@ -17,10 +18,11 @@ module.exports = function (settings) {
 	this.url = url (this.settings);
 	
 	this.databases = {};
-	this.connect ();
 };
 
-module.exports.prototype = {
+mixins (['ready'], module.exports);
+
+_.extend (module.exports.prototype, {
 	settings: {
 		secure: false,
 		host: 'localhost',
@@ -28,26 +30,42 @@ module.exports.prototype = {
 		oauth: null
 	},
 
-	connect: function () {
-		// console.log ('* Listen for db_update notifications http stream')
-
-		request ({
+	fetch: function () {
+		return request ({
 			url: this.url + '_config/http-notifications',
 			oauth: this.settings.oauth,
 			accept: 'application/json'
-		})
-			.then (_.bind (this.stream, this))
-			.fail (console.error)
-			.done ();
+		});
+	},
+
+	update: function (settings) {
+		return this.stream (settings);
 	},
 
 	stream: function (settings) {
 		var url = 'http://' + this.settings.host + ':' + settings.port + '/';
+
+		var restart = _.bind (function () {
+			this.stream (settings);
+		}, this);
+
+		var deferred = Q.defer ();
+
 		(this.updates = new JsonHttpStream (url))
-			.on ('error', console.error)
+			.on ('connect', _.bind (function () {
+				deferred.resolve (this);
+			}, this))
+
+			.on ('error', deferred.reject)
+			
 			.on ('data', _.bind (this.notify, this))
-			.on ('end', _.bind (this.connect, this))
+
+			.on ('end', function () {
+				_.delay (restart, 1000);
+			})
 			.fetch ();
+
+		return deferred.promise;
 	},
 
 	has: function (name) {
@@ -72,4 +90,4 @@ module.exports.prototype = {
 
 		return this.databases [name].ready ();
 	}
-};
+});
