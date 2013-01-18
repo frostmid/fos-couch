@@ -18,7 +18,8 @@ _.extend (module.exports.prototype, {
 	fetch: function () {
 		return request ({
 			url: this.url,
-			accept: 'application/json'
+			accept: 'application/json',
+			auth: this.database.server.settings.auth	// TODO: Reimplement
 		});
 	},
 
@@ -65,7 +66,7 @@ _.extend (module.exports.prototype, {
 			headers: {
 				'content-type': 'application/json'
 			},
-			oauth: this.database.server.settings.oauth	// TODO: This should be passed from client
+			auth: this.database.server.settings.auth	// TODO: This should be passed from client
 		})
 			.then (_.bind (this.returnNotReady, this))
 			.then (_.bind (this.ready, this));
@@ -74,7 +75,7 @@ _.extend (module.exports.prototype, {
 	getAttachment: function (name) {
 		return request ({
 			url: this.url + encodeURIComponent (name),
-			oauth: this.database.server.settings.oauth,
+			auth: this.database.server.settings.auth,
 			returnResponse: true
 		});
 	},
@@ -88,7 +89,7 @@ _.extend (module.exports.prototype, {
 			headers: {
 				'content-type': attachment.contentType
 			},
-			oauth: this.database.server.settings.oauth	// TODO: This should be passed from client
+			auth: this.database.server.settings.auth	// TODO: This should be passed from client
 		})
 			.fail (_.bind (this.returnError, this))
 			.then (_.bind (this.returnNotReady, this));
@@ -99,7 +100,7 @@ _.extend (module.exports.prototype, {
 			url: this.url + encodeURIComponent (name) + '?rev=' + this.get ('_rev'),
 			accept: 'application/json',
 			method: 'DELETE',
-			oauth: this.database.server.settings.oauth	// TODO: This should be passed from client
+			auth: this.database.server.settings.auth	// TODO: This should be passed from client
 		})
 			.fail (_.bind (this.returnError, this))
 			.then (_.bind (this.returnNotReady, this));

@@ -16,9 +16,15 @@ var paramsKeys = ['descending', 'include_docs', 'reduce',
 	'key', 'startkey', 'endkey', 'keys',
 	'limit', 'skip', 'group', 'group_level'];
 
+var stringifyKeys = ['key', 'startkey', 'endkey'];
+
 function filterParams (params) {
 	return _.reduce (params, function (memo, value, index) {
 		if (paramsKeys.indexOf (index) !== -1) {
+			if (stringifyKeys.indexOf (index) !== -1) {
+				value = JSON.stringify (value);
+			}
+
 			memo [index] = value;
 		}
 		return memo;
@@ -26,7 +32,9 @@ function filterParams (params) {
 }
 
 function applyParams (url, params) {
-	return url + '?' + querystring.stringify (filterParams (params));
+	return url + '?' + querystring.stringify (
+		filterParams (params)
+	);
 }
 
 // Check, if keys are equal
@@ -71,7 +79,8 @@ _.extend (module.exports.prototype, {
 		} else {
 			return request ({
 				url: applyParams (this.view.url, params),
-				accept: 'application/json'
+				accept: 'application/json',
+				auth: this.view.database.server.settings.auth
 			});
 		}
 	},

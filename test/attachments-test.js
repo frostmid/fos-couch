@@ -10,11 +10,15 @@ var settings = {
 	secure: false,
 	host: '192.168.1.42',
 	port: 5984,
-	oauth: {
+	_oauth: {
 		consumer_key: "61a712f6c38206b3c78b-1",
 		consumer_secret: "29db78b67a412c90e7bf-1",
 		token: "personal-2ca6ab4d2f91a8d84087-1",
 		token_secret: "0ecc8b3c04d821cc7b6b-1"
+	},
+	auth: {
+		username: 'lyxsus',
+		password: 'letmein'
 	}
 };
 
@@ -104,4 +108,4 @@ vows.describe ('fos-couch/attachments').addBatch ({
 			}
 		}
 	}
-}).export (module);;
+}).export (module);

@@ -26,14 +26,13 @@ _.extend (module.exports.prototype, {
 	settings: {
 		secure: false,
 		host: 'localhost',
-		port: 5984,
-		oauth: null
+		port: 5984
 	},
 
 	fetch: function () {
 		return request ({
 			url: this.url + '_config/http-notifications',
-			oauth: this.settings.oauth,
+			auth: this.settings.auth,
 			accept: 'application/json'
 		});
 	},

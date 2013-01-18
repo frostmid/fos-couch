@@ -38,7 +38,7 @@ _.extend (module.exports.prototype, {
 			headers: {
 				'content-type': 'application/json'
 			},
-			oauth: this.database.server.settings.oauth	// TODO: Bypass client authorization tokens
+			auth: this.database.server.settings.auth	// TODO: Bypass client authorization tokens
 		})
 			.then (_.bind (function (resp) {
 				return this.get (resp.id);
