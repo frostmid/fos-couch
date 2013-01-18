@@ -36,7 +36,7 @@ _.extend (module.exports.prototype, {
 	},
 
 	update: function (designDoc) {
-		(this.designDoc = designDoc)
+		(this.designDoc = designDoc).lock (this)
 			.on ('change', _.bind (function () {
 				_.each (this.fragments, function (fragment) {
 					fragment.refetch ();

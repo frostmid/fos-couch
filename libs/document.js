@@ -10,7 +10,7 @@ module.exports = function (database, id) {
 	this.url = database.url + encodeURIComponent (id) + '/';
 };
 
-mixins (['emitter', 'ready'], module.exports);
+mixins (['emitter', 'ready', 'lock'], module.exports);
 
 _.extend (module.exports.prototype, {
 	data: null,
