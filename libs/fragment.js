@@ -10,7 +10,7 @@ module.exports = function (view, params) {
 	this.params = params;
 };
 
-mixins (['emitter', 'ready'], module.exports);
+mixins (['emitter', 'ready', 'lock'], module.exports);
 
 var paramsKeys = ['descending', 'include_docs', 'reduce',
 	'key', 'startkey', 'endkey', 'keys',

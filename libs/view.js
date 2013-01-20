@@ -50,7 +50,9 @@ _.extend (module.exports.prototype, {
 			params.keys,
 			params.startkey,
 			params.endkey,
-			params.descending
+			params.descending,
+			params.limit,
+			params.skip
 		]));
 	},
 
