@@ -19,7 +19,7 @@ var paramsKeys = ['descending', 'include_docs', 'reduce',
 var stringifyKeys = ['key', 'startkey', 'endkey'];
 
 function filterParams (params) {
-	return _.reduce (params, function (memo, value, index) {
+	var result = _.reduce (params, function (memo, value, index) {
 		if (paramsKeys.indexOf (index) !== -1) {
 			if (stringifyKeys.indexOf (index) !== -1) {
 				value = JSON.stringify (value);
@@ -29,6 +29,10 @@ function filterParams (params) {
 		}
 		return memo;
 	}, {});
+
+	result ['update_seq'] = true;
+
+	return result;
 }
 
 function applyParams (url, params) {
@@ -81,8 +85,18 @@ _.extend (module.exports.prototype, {
 				url: applyParams (this.view.url, params),
 				accept: 'application/json',
 				auth: this.view.database.server.settings.auth
-			});
+			})
+				.then (_.bind (this.format, this))
 		}
+	},
+
+	format: function (json) {
+		json ['_rev'] = json ['update_seq'] + '-update_seq';
+		delete json ['update_seq'];
+
+		json ['type'] = this.params.type;
+
+		return json;
 	},
 
 	get: function (key) {
