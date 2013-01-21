@@ -35,7 +35,7 @@ _.extend (module.exports.prototype, {
 		return this.database.documents.get (this.designDocId);
 	},
 
-	update: function (designDoc) {
+	fetched: function (designDoc) {
 		(this.designDoc = designDoc).lock (this)
 			.on ('change', _.bind (function () {
 				_.each (this.fragments, function (fragment) {

@@ -29,7 +29,7 @@ _.extend (module.exports.prototype, {
 		});
 	},
 
-	update: function (info) {
+	fetched: function (info) {
 		this.info = info;
 	},
 

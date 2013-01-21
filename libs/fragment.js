@@ -103,7 +103,7 @@ _.extend (module.exports.prototype, {
 		return this.data [key];
 	},
 
-	update: function (data) {
+	fetched: function (data) {
 		this.data = data;
 		this.emit ('change');
 	},

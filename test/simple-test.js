@@ -7,7 +7,7 @@ var vows = require ('vows'),
 
 var settings = {
 	secure: false,
-	host: '192.168.1.42',
+	host: '89.179.119.16',
 	port: 5984,
 	_oauth: {
 		consumer_key: "61a712f6c38206b3c78b-1",
@@ -16,7 +16,7 @@ var settings = {
 		token_secret: "0ecc8b3c04d821cc7b6b-1"
 	},
 	auth: {
-		username: 'lyxsus',
+		username: 'lyxsus@gmail.com',
 		password: 'letmein'
 	}
 };

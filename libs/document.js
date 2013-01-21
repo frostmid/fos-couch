@@ -4,10 +4,11 @@ var _ = require ('lodash'),
 	request = require ('fos-request');
 
 
-module.exports = function (database, id) {
-	this.database = database;
+module.exports = function (documents, id) {
+	this.documents = documents;
+	this.database = documents.database;
 	this.id = id;
-	this.url = database.url + encodeURIComponent (id) + '/';
+	this.url = this.database.url + encodeURIComponent (id) + '/';
 };
 
 mixins (['emitter', 'ready', 'lock'], module.exports);
@@ -21,6 +22,10 @@ _.extend (module.exports.prototype, {
 			accept: 'application/json',
 			auth: this.database.server.settings.auth	// TODO: Reimplement
 		});
+	},
+
+	fetched: function (data) {
+		this.update (data);
 	},
 
 	update: function (data) {
@@ -76,7 +81,7 @@ _.extend (module.exports.prototype, {
 		return request ({
 			url: this.url + encodeURIComponent (name),
 			auth: this.database.server.settings.auth,
-			returnResponse: true
+			returnRequest: true
 		});
 	},
 
@@ -104,6 +109,12 @@ _.extend (module.exports.prototype, {
 		})
 			.fail (_.bind (this.returnError, this))
 			.then (_.bind (this.returnNotReady, this));
+	},
+
+	release: function () {
+		delete this.data;
+		this.documents [this.id] = null;
+		console.log ('release document', this.id);
 	}
 });
 

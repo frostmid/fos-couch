@@ -37,7 +37,7 @@ _.extend (module.exports.prototype, {
 		});
 	},
 
-	update: function (settings) {
+	fetched: function (settings) {
 		return this.stream (settings);
 	},
 

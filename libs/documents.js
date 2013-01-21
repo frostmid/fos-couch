@@ -11,7 +11,7 @@ module.exports = function (database) {
 _.extend (module.exports.prototype, {
 	get: function (id) {
 		if (!this.has (id)) {
-			this.docs [id] = new Document (this.database, id);
+			this.docs [id] = new Document (this, id);
 		}
 
 		return this.docs [id].ready ();
