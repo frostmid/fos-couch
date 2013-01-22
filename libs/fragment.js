@@ -5,8 +5,9 @@ var querystring = require ('querystring'),
 	mixins = require ('fos-mixins');
 
 
-module.exports = function (view, params) {
-	this.view = view;
+module.exports = function (view, id, params) {
+	this.id = id;
+	this.view = view.lock (this);
 	this.params = params;
 };
 
@@ -112,5 +113,18 @@ _.extend (module.exports.prototype, {
 		if (_match (key, this.params)) {
 			this.refetch ();
 		}
+	},
+
+	dispose: function () {
+		this.removeAllListeners ();
+		this.view.unset (this.id);
+		
+		this.view.release (this);
+	},
+
+	cleanup: function () {
+		this.data = null;
+		this.view = null;
+		this.params = null;
 	}
 });

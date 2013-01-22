@@ -19,7 +19,7 @@ module.exports = function (server, name) {
 	this.documents = new Documents (this);
 };
 
-mixins (['ready'], module.exports);
+mixins (['ready', 'lock'], module.exports);
 
 _.extend (module.exports.prototype, {
 	fetch: function () {
@@ -74,5 +74,19 @@ _.extend (module.exports.prototype, {
 				view.notify (event);
 			});
 		}
+	},
+
+	dispose: function () {
+		this.server.unset (this.name);
+
+		this.documents.cleanup ();
+		this.views.cleanup ();
+		this.cleanup ();
+	},
+
+	cleanup: function () {
+		this.documents = null;
+		this.views = null;
+		this.server = null;
 	}
 });

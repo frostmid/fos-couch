@@ -88,5 +88,9 @@ _.extend (module.exports.prototype, {
 		}
 
 		return this.databases [name].ready ();
+	},
+
+	unset: function (name) {
+		delete this.databases [name];
 	}
 });

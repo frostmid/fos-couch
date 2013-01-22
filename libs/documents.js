@@ -1,12 +1,16 @@
 var _ = require ('lodash'),
 	Document = require ('./document'),
-	request = require ('fos-request');
+
+	request = require ('fos-request'),
+	mixins = require ('fos-mixins');
 
 
 module.exports = function (database) {
-	this.database = database;
+	this.database = database.lock (this);
 	this.docs = {};
 };
+
+mixins (['lock'], module.exports);
 
 _.extend (module.exports.prototype, {
 	get: function (id) {
@@ -15,6 +19,11 @@ _.extend (module.exports.prototype, {
 		}
 
 		return this.docs [id].ready ();
+	},
+
+	unset: function (id) {
+		// console.log ('delete doc', id, 'from docs');
+		delete this.docs [id];
 	},
 
 	create: function () {
@@ -48,5 +57,16 @@ _.extend (module.exports.prototype, {
 
 	has: function (id) {
 		return this.docs [id] != undefined;
+	},
+
+	dispose: function () {
+		// console.log ('dispose documents');
+		this.disposing = null;
+		this.database.release (this, true);
+	},
+
+	cleanup: function () {
+		this.database = null;
+		this.docs = null;
 	}
 });

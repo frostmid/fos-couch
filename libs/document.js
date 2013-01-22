@@ -5,7 +5,7 @@ var _ = require ('lodash'),
 
 
 module.exports = function (documents, id) {
-	this.documents = documents;
+	this.documents = documents.lock (this);
 	this.database = documents.database;
 	this.id = id;
 	this.url = this.database.url + encodeURIComponent (id) + '/';
@@ -111,10 +111,19 @@ _.extend (module.exports.prototype, {
 			.then (_.bind (this.returnNotReady, this));
 	},
 
-	release: function () {
-		delete this.data;
-		this.documents [this.id] = null;
-		console.log ('release document', this.id);
+	dispose: function () {
+		this.removeAllListeners ();
+
+		this.documents.unset (this.id);
+		this.documents.release (this);
+
+		this.cleanup ();
+	},
+
+	cleanup: function () {
+		this.data = null;
+		this.documents = null;
+		this.database = null;
 	}
 });
 

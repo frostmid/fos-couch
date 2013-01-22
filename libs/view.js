@@ -7,17 +7,17 @@ var _ = require ('lodash'),
 
 	Fragment = require ('./fragment');
 	
-	
 
+module.exports = function (views, id, design, view) {
+	this.id = id;
+	this.views = views.lock (this);
+	this.database = views.database;
 
-module.exports = function (database, design, view) {
-	this.database = database;
 	this.design = design;
 	this.view = view;
-
 	this.designDocId = '_design/' + design;
 
-	this.url = database.url +
+	this.url = this.database.url +
 		'_design/' + encodeURIComponent (design) +
 		'/_view/' + encodeURIComponent (view);
 
@@ -25,7 +25,7 @@ module.exports = function (database, design, view) {
 };
 
 
-mixins (['ready'], module.exports);
+mixins (['ready', 'lock'], module.exports);
 
 
 _.extend (module.exports.prototype, {
@@ -60,7 +60,7 @@ _.extend (module.exports.prototype, {
 		var id = this.key (params);
 		
 		if (!this.has (id)) {
-			this.fragments [id] = new Fragment (this, params);
+			this.fragments [id] = new Fragment (this, id, params);
 		}
 
 		return this.fragments [id].ready ();
@@ -68,6 +68,10 @@ _.extend (module.exports.prototype, {
 
 	has: function (id) {
 		return this.fragments [id] != undefined;
+	},
+
+	unset: function (id) {
+		delete this.fragments [id];
 	},
 
 	notify: function (event) {
@@ -84,5 +88,21 @@ _.extend (module.exports.prototype, {
 				})
 			}
 		}) (event.doc);
+	},
+
+	dispose: function () {
+		this.views.unset (this.id);
+
+		this.views.release (this, true);
+		this.designDoc.release (this);
+
+		this.cleanup ();
+	},
+
+	cleanup: function () {
+		this.database = null;
+		this.fragments = null;
+		this.views = null;
+		this.designDoc = null;
 	}
 });
