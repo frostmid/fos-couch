@@ -97,7 +97,8 @@ _.extend (module.exports.prototype, {
 			auth: this.database.server.settings.auth	// TODO: This should be passed from client
 		})
 			.fail (_.bind (this.returnError, this))
-			.then (_.bind (this.returnNotReady, this));
+			.then (_.bind (this.returnNotReady, this))
+			.then (_.bind (this.ready, this));
 	},
 
 	removeAttachment: function (name) {
@@ -108,7 +109,8 @@ _.extend (module.exports.prototype, {
 			auth: this.database.server.settings.auth	// TODO: This should be passed from client
 		})
 			.fail (_.bind (this.returnError, this))
-			.then (_.bind (this.returnNotReady, this));
+			.then (_.bind (this.returnNotReady, this))
+			.then (_.bind (this.ready, this));
 	},
 
 	dispose: function () {
