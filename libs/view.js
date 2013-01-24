@@ -10,7 +10,7 @@ var _ = require ('lodash'),
 
 module.exports = function (views, id, design, view) {
 	this.id = id;
-	this.views = views.lock (this);
+	this.views = views;
 	this.database = views.database;
 
 	this.design = design;
@@ -93,7 +93,6 @@ _.extend (module.exports.prototype, {
 	dispose: function () {
 		this.views.unset (this.id);
 
-		this.views.release (this);
 		this.designDoc.release (this);
 
 		this.cleanup ();

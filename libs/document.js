@@ -5,7 +5,7 @@ var _ = require ('lodash'),
 
 
 module.exports = function (documents, id) {
-	this.documents = documents.lock (this);
+	this.documents = documents;
 	this.database = documents.database;
 	this.id = id;
 	this.url = this.database.url + encodeURIComponent (id) + '/';
@@ -119,7 +119,6 @@ _.extend (module.exports.prototype, {
 
 	dispose: function () {
 		// console.log ('#dispose document', this.id)
-		this.documents.release (this);
 
 		this.documents.unset (this.id);
 
