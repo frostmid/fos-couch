@@ -41,6 +41,10 @@ _.extend (module.exports.prototype, {
 		return this.data [key];
 	},
 
+	has: function (key) {
+		return this.data [key] != undefined;
+	},
+
 	remove: function () {
 		return this.save ({
 			_deleted: true
@@ -114,9 +118,9 @@ _.extend (module.exports.prototype, {
 	},
 
 	dispose: function () {
-		this.removeAllListeners ();
-
 		this.documents.unset (this.id);
+
+		this.removeAllListeners ();
 		this.documents.release (this);
 
 		this.cleanup ();
