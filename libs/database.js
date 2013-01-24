@@ -7,7 +7,7 @@ var _ = require ('lodash'),
 	request = require ('fos-request'),
 
 	Views = require ('./views'),
-	Documents = require ('./documents');;
+	Documents = require ('./documents');
 
 
 module.exports = function (server, name) {
@@ -15,8 +15,8 @@ module.exports = function (server, name) {
 	this.name = name;
 	this.url = this.server.url + encodeURIComponent (name) + '/';
 
-	this.views = new Views (this);
-	this.documents = new Documents (this);
+	this.views = (new Views (this)).lock (this);
+	this.documents = (new Documents (this)).lock (this);
 };
 
 mixins (['ready', 'lock'], module.exports);
