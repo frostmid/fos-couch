@@ -14,7 +14,7 @@ module.exports = function (view, id, params) {
 mixins (['emitter', 'ready', 'lock'], module.exports);
 
 var paramsKeys = ['descending', 'include_docs', 'reduce',
-	'key', 'startkey', 'endkey', 'keys',
+	'key', 'startkey', 'endkey',
 	'limit', 'skip', 'group', 'group_level'];
 
 var stringifyKeys = ['key', 'startkey', 'endkey'];
@@ -37,9 +37,16 @@ function filterParams (params) {
 }
 
 function applyParams (url, params) {
-	return url + '?' + querystring.stringify (
+	var result = url + '?' + querystring.stringify (
 		filterParams (params)
 	);
+
+	// TOFIX: Dirty hack
+	if (params.keys && params.reduce) {
+		result += '&group=true';
+	}
+
+	return result;
 }
 
 // Check, if keys are equal
@@ -82,13 +89,22 @@ _.extend (module.exports.prototype, {
 		} if (params.autoreduce) {
 			throw new Error ('Not implemented');
 		} else {
-			return request ({
-				url: applyParams (this.view.url, params),
-				accept: 'application/json',
-				auth: this.view.database.server.settings.auth
-			})
+			return this.requestCouchDb (params)
 				.then (_.bind (this.format, this))
 		}
+	},
+
+	requestCouchDb: function (params) {
+		return request ({
+			method: params.keys ? 'POST' : 'GET',
+			url: applyParams (this.view.url, params),
+			accept: 'application/json',
+			body: params.keys ? JSON.stringify ({keys: params.keys}) : null,
+			headers: {
+				'content-type': 'application/json'
+			},
+			auth: this.view.database.server.settings.auth
+		});
 	},
 
 	format: function (json) {
@@ -104,6 +120,10 @@ _.extend (module.exports.prototype, {
 		return this.data [key];
 	},
 
+	has: function (key) {
+		return this.data [key] != undefined;
+	},
+
 	fetched: function (data) {
 		this.data = data;
 		this.emit ('change');
@@ -116,10 +136,13 @@ _.extend (module.exports.prototype, {
 	},
 
 	dispose: function () {
-		this.removeAllListeners ();
 		this.view.unset (this.id);
+
+		this.removeAllListeners ();
 		
 		this.view.release (this);
+
+		this.cleanup ();
 	},
 
 	cleanup: function () {
