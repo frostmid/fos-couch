@@ -34,8 +34,8 @@ _.extend (module.exports.prototype, {
 	},
 
 	dispose: function () {
-		this.disposing = null;
-		this.database.release (this, true);
+		this.database.release (this);
+		this.cleanup ();
 	},
 
 	cleanup: function () {
