@@ -93,7 +93,7 @@ _.extend (module.exports.prototype, {
 	dispose: function () {
 		this.views.unset (this.id);
 
-		this.views.release (this, true);
+		this.views.release (this);
 		this.designDoc.release (this);
 
 		this.cleanup ();
