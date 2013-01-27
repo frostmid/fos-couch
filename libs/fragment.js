@@ -1,5 +1,6 @@
 var querystring = require ('querystring'),
 	_ = require ('lodash'),
+	Q = require ('q'),
 
 	request = require ('fos-request'),
 	mixins = require ('fos-mixins');
@@ -49,6 +50,18 @@ function applyParams (url, params) {
 	return result;
 }
 
+function autoReduce (params) {
+	var reduceParams = _.extend ({}, params, {
+		reduce: true
+	});
+
+	delete reduceParams ['include_docs'];
+	delete reduceParams ['limit'];
+	delete reduceParams ['skip'];
+
+	return reduceParams;
+}
+
 // Check, if keys are equal
 var _eq = function (left, right) {
 	if (!left || !right) return left == right;
@@ -87,10 +100,20 @@ _.extend (module.exports.prototype, {
 		if (params.fti) {
 			throw new Error ('Not implemented');
 		} if (params.autoreduce) {
-			throw new Error ('Not implemented');
+			return Q.all ([this.requestCouchDb (params), this.requestCouchDb (autoReduce (params))])
+				.fail (console.error)
+				.then (function (responses) {
+					var summary = responses [1].rows [0].value;
+
+					return _.extend (responses [0], {
+						summary: summary,
+						total_rows: summary.count
+					});
+				})
+				.then (_.bind (this.format, this));
 		} else {
 			return this.requestCouchDb (params)
-				.then (_.bind (this.format, this))
+				.then (_.bind (this.format, this));
 		}
 	},
 

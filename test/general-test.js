@@ -23,7 +23,7 @@ var settings = {
 
 
 
-vows.describe ('fos-couch/simple').addBatch ({
+vows.describe ('fos-couch/general').addBatch ({
 	'Server': {
 		topic: new Server (settings),
 
