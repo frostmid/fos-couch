@@ -93,12 +93,22 @@ function _match (key, frag) {
 }
 
 
+// Fix fti search string
+function _ftiSearchString (str) {
+	if (!str.match (' ')) {
+		str = '(' + str + ' OR ' + str + '*)';
+	}
+	return str;
+}
+
+
 _.extend (module.exports.prototype, {
 	fetch: function () {
 		var params = this.params;
 
 		if (params.fti) {
-			throw new Error ('Not implemented');
+			return this.requestCouchDbLucene (params)
+				.then (_.bind (this.formatFullText, this))
 		} if (params.autoreduce) {
 			return Q.all ([this.requestCouchDb (params), this.requestCouchDb (autoReduce (params))])
 				.fail (console.error)
@@ -130,6 +140,44 @@ _.extend (module.exports.prototype, {
 		});
 	},
 
+	requestCouchDbLucene: function (params) {
+		var url = this.view.database.server.url
+			+ '_fti/local/'
+			+ encodeURIComponent (this.view.database.name)
+			+ '/_design/' + this.view.design + '/' + encodeURIComponent (this.view.view);
+
+		var search;
+
+		if (params.fields && _.size (params.fields)) {
+			var tmp = [];
+
+			if (params.search) {
+				tmp.push ('(default:' + _ftiSearchString (params.search) + ')')
+			}
+
+			_.each (params.fields, function (value, index) {
+				tmp.push ('(' + index + ':"' + value + '")');
+			});
+
+			search = tmp.join (' AND ');
+		} else {
+			search = _ftiSearchString (params.search);
+		}
+
+		url += '?q=' + encodeURIComponent (search);
+		url += '&stale=ok';
+
+		return request ({
+			method: params.keys ? 'POST' : 'GET',
+			url: url,
+			accept: 'application/json',
+			headers: {
+				'content-type': 'application/json'
+			},
+			auth: this.view.database.server.settings.auth
+		});
+	},
+
 	format: function (json) {
 		json ['_rev'] = json ['update_seq'] + '-update_seq';
 		delete json ['update_seq'];
@@ -137,6 +185,22 @@ _.extend (module.exports.prototype, {
 		json ['type'] = this.params.type;
 
 		return json;
+	},
+
+	formatFullText: function (json) {
+		return {
+			_rev: Date.now () + '-' + json.etag,
+			total_rows: json.total_rows || 0,
+			offset: this.params.skip || 0,
+			type: this.params.type,
+			rows: _.map (json.rows, function (row) {
+				return {
+					id: row.id,
+					key: row.score,
+					// doc: row.doc
+				};
+			})
+		};
 	},
 
 	get: function (key) {
