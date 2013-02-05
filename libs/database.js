@@ -71,11 +71,11 @@ _.extend (module.exports.prototype, {
 					.fail (console.error)
 					.done ();
 			}
-		}
 
-		_.each (this.views.views, function (view) {
-			view.notify (event);
-		});
+			_.each (this.views.views, function (view) {
+				view.notify (event);
+			});
+		}
 	},
 
 	dispose: function () {
