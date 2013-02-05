@@ -183,6 +183,7 @@ _.extend (module.exports.prototype, {
 		delete json ['update_seq'];
 
 		json ['type'] = this.params.type;
+		json.options = this.params;
 
 		return json;
 	},
@@ -193,6 +194,7 @@ _.extend (module.exports.prototype, {
 			total_rows: json.total_rows || 0,
 			offset: this.params.skip || 0,
 			type: this.params.type,
+			options: this.params,
 			rows: _.map (json.rows, function (row) {
 				return {
 					id: row.id,
@@ -217,6 +219,7 @@ _.extend (module.exports.prototype, {
 	},
 
 	notify: function (key) {
+		// console.log ('fragment notify', key, this.params.startkey);
 		if (_match (key, this.params)) {
 			this.refetch ();
 		}

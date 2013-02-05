@@ -26,7 +26,8 @@ _.extend (module.exports.prototype, {
 	fetch: function () {
 		return request ({
 			url: this.url,
-			accept: 'application/json'
+			accept: 'application/json',
+			auth: this.server.settings.auth
 		});
 	},
 
@@ -70,11 +71,11 @@ _.extend (module.exports.prototype, {
 					.fail (console.error)
 					.done ();
 			}
-
-			_.each (this.views.views, function (view) {
-				view.notify (event);
-			});
 		}
+
+		_.each (this.views.views, function (view) {
+			view.notify (event);
+		});
 	},
 
 	dispose: function () {
