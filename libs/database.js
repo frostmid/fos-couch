@@ -65,14 +65,22 @@ _.extend (module.exports.prototype, {
 		if (event.doc) {
 			if (this.documents.has (event.id)) {
 				Q.when (this.documents.get (event.id))
-					.then (function (doc) {
+					.then (_.bind (function (doc) {
+						var previousEvent = _.extend ({}, event, {doc: doc.data});
+
+						_.each (this.views.views, function (view) {
+							view.notify (previousEvent);
+							view.notify (event);
+						});
+
 						doc.update (event.doc);
-					})
+					}, this))
 					.fail (console.error)
 					.done ();
 			}
 
 			_.each (this.views.views, function (view) {
+				// TODO: Fetch previous element
 				view.notify (event);
 			});
 		}
