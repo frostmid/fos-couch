@@ -10,6 +10,8 @@ module.exports = function (view, id, params) {
 	this.id = id;
 	this.view = view.lock (this);
 	this.params = params;
+
+	this.refetch = _.throttle (this.refetch, 1000);		// TODO: Debug that
 };
 
 mixins (['emitter', 'ready', 'lock'], module.exports);
@@ -113,12 +115,16 @@ _.extend (module.exports.prototype, {
 			return Q.all ([this.requestCouchDb (params), this.requestCouchDb (autoReduce (params))])
 				.fail (console.error)
 				.then (function (responses) {
-					var summary = responses [1].rows [0].value;
+					if (responses [1].rows.length) {
+						var summary = responses [1].rows [0].value;
 
-					return _.extend (responses [0], {
-						summary: summary,
-						total_rows: summary.count
-					});
+						return _.extend (responses [0], {
+							summary: summary,
+							total_rows: summary.count
+						});
+					} else {
+						return responses [0];
+					}
 				})
 				.then (_.bind (this.format, this));
 		} else {
