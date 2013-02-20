@@ -3,7 +3,7 @@ var _ = require ('lodash'),
 	querystring = require ('querystring'),
 
 	JsonHttpStream = require ('fos-json-http-stream'),
-	mixins = require ('fos-mixins'),
+	mixin = require ('fos-mixin'),
 	request = require ('fos-request'),
 
 	Views = require ('./views'),
@@ -20,7 +20,7 @@ module.exports = function (server, name) {
 	this.documents = (new Documents (this)).lock (this);
 };
 
-mixins (['ready', 'lock'], module.exports);
+mixin (module.exports);
 
 _.extend (module.exports.prototype, {
 	fetch: function () {

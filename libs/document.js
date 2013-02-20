@@ -1,6 +1,6 @@
 var _ = require ('lodash'),
 
-	mixins = require ('fos-mixins'),
+	mixin = require ('fos-mixin'),
 	request = require ('fos-request');
 
 
@@ -11,7 +11,7 @@ module.exports = function (documents, id) {
 	this.url = this.database.url + encodeURIComponent (id) + '/';
 };
 
-mixins (['emitter', 'ready', 'lock'], module.exports);
+mixin (module.exports);
 
 _.extend (module.exports.prototype, {
 	data: null,

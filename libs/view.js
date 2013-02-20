@@ -1,6 +1,6 @@
 var _ = require ('lodash'),
 
-	mixins = require ('fos-mixins'),
+	mixin = require ('fos-mixin'),
 	request = require ('fos-request'),
 	evaluate = require ('fos-evaluate'),
 	hash = require ('fos-hash'),
@@ -25,7 +25,7 @@ module.exports = function (views, id, design, view) {
 };
 
 
-mixins (['ready', 'lock'], module.exports);
+mixin (module.exports);
 
 
 _.extend (module.exports.prototype, {

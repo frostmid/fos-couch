@@ -3,7 +3,7 @@ var querystring = require ('querystring'),
 	Q = require ('q'),
 
 	request = require ('fos-request'),
-	mixins = require ('fos-mixins');
+	mixin = require ('fos-mixin');
 
 
 module.exports = function (view, id, params) {
@@ -14,7 +14,7 @@ module.exports = function (view, id, params) {
 	this.refetch = _.throttle (this.refetch, 1000);		// TODO: Debug that
 };
 
-mixins (['emitter', 'ready', 'lock'], module.exports);
+mixin (module.exports);
 
 var paramsKeys = ['descending', 'include_docs', 'reduce',
 	'key', 'startkey', 'endkey',
@@ -120,7 +120,7 @@ _.extend (module.exports.prototype, {
 
 						return _.extend (responses [0], {
 							summary: summary,
-							total_rows: summary.count
+							total_rows: summary.count || summary.total_rows
 						});
 					} else {
 						return responses [0];
@@ -226,7 +226,7 @@ _.extend (module.exports.prototype, {
 
 	notify: function (key) {
 		// console.log ('fragment notify', key, this.params.startkey);
-		if (_match (key, this.params)) {
+		if (!this.disposing && _match (key, this.params)) {
 			this.refetch ();
 		}
 	},

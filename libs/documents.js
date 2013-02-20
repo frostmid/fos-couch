@@ -2,7 +2,7 @@ var _ = require ('lodash'),
 	Document = require ('./document'),
 
 	request = require ('fos-request'),
-	mixins = require ('fos-mixins');
+	mixin = require ('fos-mixin');
 
 
 module.exports = function (database) {
@@ -11,7 +11,7 @@ module.exports = function (database) {
 	this.docs = {};
 };
 
-mixins (['lock'], module.exports);
+mixin (module.exports);
 
 _.extend (module.exports.prototype, {
 	get: function (id) {

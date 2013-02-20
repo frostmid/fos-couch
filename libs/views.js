@@ -1,13 +1,13 @@
 var _ = require ('lodash'),
 	View = require ('./view'),
-	mixins = require ('fos-mixins');
+	mixin = require ('fos-mixin');
 
 module.exports = function (database) {
 	this.database = database.lock (this);
 	this.views = {};
 };
 
-mixins (['lock'], module.exports);
+mixin (module.exports);
 
 
 _.extend (module.exports.prototype, {

@@ -122,7 +122,7 @@ vows.describe ('fos-couch/general').addBatch ({
 
 						Q.when (doc.ready ())
 							.then (function (doc) {
-								// console.log ('!!!', 'update doc');
+								// console.log ('!!!', 'update doc', doc);
 								doc.save ('urn:debug:test', {title: 'title changed'});
 							})
 							.then (function (doc) {

@@ -2,7 +2,7 @@ var Q = require ('q'),
 	_ = require ('lodash'),
 
 	JsonHttpStream = require ('fos-json-http-stream'),
-	mixins = require ('fos-mixins'),
+	mixin = require ('fos-mixin'),
 	request = require ('fos-request')
 
 	Database = require ('./database');
@@ -20,7 +20,7 @@ module.exports = function (settings) {
 	this.databases = {};
 };
 
-mixins (['ready'], module.exports);
+mixin (module.exports);
 
 _.extend (module.exports.prototype, {
 	settings: {

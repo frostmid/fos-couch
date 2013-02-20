@@ -11,7 +11,7 @@
 	"dependencies": {
 		"lodash": "0.10.x",
 		"q": "0.8.x",
-		"fos-mixins": "git://github.com/lyxsus/fos-mixins.git",
+		"fos-mixin": "git://github.com/lyxsus/fos-mixin.git",
 		"fos-request": "git://github.com/lyxsus/fos-request.git",
 		"fos-json-http-stream": "git://github.com/lyxsus/fos-json-http-stream.git",
 		"fos-evaluate": "git://github.com/lyxsus/fos-evaluate.git",
