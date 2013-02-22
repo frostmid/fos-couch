@@ -123,7 +123,9 @@ _.extend (module.exports.prototype, {
 							total_rows: summary.count || summary.total_rows
 						});
 					} else {
-						return responses [0];
+						return _.extend (responses [0], {
+							total_rows: 0
+						});
 					}
 				})
 				.then (_.bind (this.format, this));

@@ -71,7 +71,9 @@ _.extend (module.exports.prototype, {
 	},
 
 	unset: function (id) {
-		delete this.fragments [id];
+		if (this.fragments) {
+			delete this.fragments [id];
+		}
 	},
 
 	notify: function (event) {
