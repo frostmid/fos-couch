@@ -3,6 +3,20 @@ var _ = require ('lodash'),
 	mixin = require ('fos-mixin'),
 	request = require ('fos-request');
 
+function filterDoc (data) {
+	var result = {},
+		allowed = ['_id', '_rev', '_attachments'];
+
+	for (var i in data) {
+		if (i.substring (0, 1) == '_' && allowed.indexOf (i) === -1) {
+			continue;
+		}
+		result [i] = data [i];
+	}
+
+	return result;
+}
+
 
 module.exports = function (documents, id) {
 	this.documents = documents;
@@ -71,7 +85,7 @@ _.extend (module.exports.prototype, {
 			url: url,
 			accept: 'application/json',
 			method: 'PUT',
-			body: JSON.stringify (this.data),
+			body: JSON.stringify (filterDoc (this.data)),
 			headers: {
 				'content-type': 'application/json'
 			},
