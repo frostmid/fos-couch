@@ -17,7 +17,7 @@ module.exports = function (settings) {
 	this.settings = _.extend ({}, this.settings, settings);
 	this.url = url (this.settings);
 	
-	this.databases = {};
+	this.databases = [];
 };
 
 mixin (module.exports);

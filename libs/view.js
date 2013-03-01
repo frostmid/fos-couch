@@ -21,7 +21,7 @@ module.exports = function (views, id, design, view) {
 		'_design/' + encodeURIComponent (design) +
 		'/_view/' + encodeURIComponent (view);
 
-	this.fragments = {};
+	this.fragments = [];
 };
 
 

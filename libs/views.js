@@ -4,7 +4,7 @@ var _ = require ('lodash'),
 
 module.exports = function (database) {
 	this.database = database.lock (this);
-	this.views = {};
+	this.views = [];
 };
 
 mixin (module.exports);

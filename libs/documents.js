@@ -8,7 +8,7 @@ var _ = require ('lodash'),
 module.exports = function (database) {
 	this.id = 'documents #' + database.name;
 	this.database = database.lock (this);
-	this.docs = {};
+	this.docs = [];
 };
 
 mixin (module.exports);
