@@ -105,6 +105,8 @@ function _ftiSearchString (str) {
 
 
 _.extend (module.exports.prototype, {
+	tag: 'fragment',
+
 	fetch: function () {
 		var params = this.params;
 

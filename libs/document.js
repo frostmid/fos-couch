@@ -20,7 +20,7 @@ function filterDoc (data) {
 
 module.exports = function (documents, id) {
 	this.documents = documents;
-	this.database = documents.database;
+	this.database = documents.database.lock (this);
 	this.id = id;
 	this.url = this.database.url + encodeURIComponent (id) + '/';
 };
@@ -29,6 +29,8 @@ mixin (module.exports);
 
 _.extend (module.exports.prototype, {
 	data: null,
+	
+	tag: 'document',
 
 	fetch: function () {
 		return request ({

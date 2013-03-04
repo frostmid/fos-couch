@@ -3,7 +3,9 @@ var _ = require ('lodash'),
 	mixin = require ('fos-mixin');
 
 module.exports = function (database) {
-	this.database = database.lock (this);
+	this.id = 'views #' + database.name;
+
+	this.database = database;
 	this.views = [];
 };
 
@@ -11,6 +13,8 @@ mixin (module.exports);
 
 
 _.extend (module.exports.prototype, {
+	tag: 'views',
+
 	key: function (design, view) {
 		return design + '/' + view;
 	},
@@ -34,7 +38,6 @@ _.extend (module.exports.prototype, {
 	},
 
 	dispose: function () {
-		this.database.release (this);
 		this.cleanup ();
 	},
 

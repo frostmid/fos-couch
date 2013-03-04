@@ -11,7 +11,7 @@ var _ = require ('lodash'),
 module.exports = function (views, id, design, view) {
 	this.id = id;
 	this.views = views;
-	this.database = views.database;
+	this.database = views.database.lock (this);
 
 	this.design = design;
 	this.view = view;
@@ -29,6 +29,8 @@ mixin (module.exports);
 
 
 _.extend (module.exports.prototype, {
+	tag: 'view',
+	
 	designDoc: null,
 
 	fetch: function () {
@@ -71,9 +73,7 @@ _.extend (module.exports.prototype, {
 	},
 
 	unset: function (id) {
-		if (this.fragments) {
-			delete this.fragments [id];
-		}
+		delete this.fragments [id];
 	},
 
 	notify: function (event) {

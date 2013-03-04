@@ -23,6 +23,8 @@ module.exports = function (server, name) {
 mixin (module.exports);
 
 _.extend (module.exports.prototype, {
+	tag: 'database',
+	
 	fetch: function () {
 		return request ({
 			url: this.url,

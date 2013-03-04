@@ -7,13 +7,15 @@ var _ = require ('lodash'),
 
 module.exports = function (database) {
 	this.id = 'documents #' + database.name;
-	this.database = database.lock (this);
+	this.database = database;
 	this.docs = [];
 };
 
 mixin (module.exports);
 
 _.extend (module.exports.prototype, {
+	tag: 'documents',
+	
 	get: function (id) {
 		if (!this.has (id)) {
 			// console.log ('get', this.database.name, id);
@@ -62,8 +64,7 @@ _.extend (module.exports.prototype, {
 	},
 
 	dispose: function () {
-		this.disposing = null;
-		this.database.release (this);
+		this.cleanup ();
 	},
 
 	cleanup: function () {
