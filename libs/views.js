@@ -6,7 +6,7 @@ module.exports = function (database) {
 	this.id = 'views #' + database.name;
 
 	this.database = database;
-	this.views = [];
+	this.views = {};
 };
 
 mixin (module.exports);

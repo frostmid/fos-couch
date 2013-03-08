@@ -32,11 +32,7 @@ _.extend (module.exports.prototype, {
 	},
 
 	fetch: function () {
-		return request ({
-			url: this.url + '_config/http-notifications',
-			auth: this.settings.auth,
-			accept: 'application/json'
-		});
+		return this.settings.notifications;
 	},
 
 	fetched: function (settings) {
@@ -57,7 +53,10 @@ _.extend (module.exports.prototype, {
 				deferred.resolve (this);
 			}, this))
 
-			.on ('error', deferred.reject)
+			.on ('error', function (error) {
+				console.error ('Updates stream error', error);
+				deferred.reject (error);
+			})
 			
 			.on ('data', _.bind (this.notify, this))
 

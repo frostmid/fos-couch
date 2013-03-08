@@ -64,23 +64,30 @@ _.extend (module.exports.prototype, {
 	handleEvent: function (event) {
 		this.info.update_seq = event.seq || event.last_seq;
 
+		
+
 		if (event.doc) {
-			if (this.documents.has (event.id)) {
-				Q.when (this.documents.get (event.id))
-					.then (_.bind (function (doc) {
-						var previousEvent = _.extend ({}, event, {doc: doc.data});
+			// console.log ('handle event', event);
+			try {
+				if (this.documents.has (event.id)) {
+					Q.when (this.documents.get (event.id))
+						.then (_.bind (function (doc) {
+							var previousEvent = _.extend ({}, event, {doc: doc.data});
 
-						_.each (this.views.views, function (view) {
-							view.notify (previousEvent);
-							view.notify (event);
-						});
+							_.each (this.views.views, function (view) {
+								view.notify (previousEvent);
+								view.notify (event);
+							});
 
-						doc.update (event.doc);
-					}, this))
-					.fail (console.error)
-					.done ();
+							doc.update (event.doc);
+						}, this))
+						.fail (console.error)
+						.done ();
+				}
+			} catch (e) {
+				console.error (e);
 			}
-
+			
 			_.each (this.views.views, function (view) {
 				// TODO: Fetch previous element
 				view.notify (event);

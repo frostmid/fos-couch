@@ -77,8 +77,8 @@ _.extend (module.exports.prototype, {
 			this.merge (arguments [1]);
 
 			url = this.database.url + '_design/' + encodeURIComponent (arguments [0]) +
-					'/_update/' + encodeURIComponent (this.data.type) +
-					'/' + encodeURIComponent (this.data._id);
+				'/_update/' + encodeURIComponent (this.data.type) +
+				'/' + encodeURIComponent (this.data._id);
 		}
 
 		// this.isReady = false;
