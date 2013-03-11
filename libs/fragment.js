@@ -189,7 +189,7 @@ _.extend (module.exports.prototype, {
 	},
 
 	format: function (json) {
-		json ['_rev'] = json ['update_seq'] + '-update_seq';
+		json ['_rev'] = (json ['update_seq'] || 0) + '-update_seq';
 		delete json ['update_seq'];
 
 		json ['type'] = this.params.type;
