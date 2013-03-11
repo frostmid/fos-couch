@@ -7,6 +7,7 @@ var Q = require ('q'),
 
 	Database = require ('./database');
 
+Q.longStackJumpLimit = 0;
 
 function url (settings) {
 	return (settings.secure ? 'https' : 'http') + '://' + settings.host + ':' + settings.port + '/';
