@@ -78,18 +78,24 @@ _.extend (module.exports.prototype, {
 
 	notify: function (event) {
 		var fragments = _.filter (this.fragments, function (fragment) {
-			return !fragment.fetching;
+			return !fragment.fetching && !fragment.params.fti;
 		});
 
 		if (!fragments.length) return;
 
-		evaluate (this.designDoc.data.views [this.view].map, {
-			emit: function (key, value) {
-				_.each (fragments, function (fragment) {
-					fragment.notify (key);
-				})
-			}
-		}) (event.doc);
+		var view = this.designDoc.data.views [this.view];
+
+		if (view) {
+			evaluate (view.map, {
+				emit: function (key, value) {
+					_.each (fragments, function (fragment) {
+						fragment.notify (key);
+					})
+				}
+			}) (event.doc);
+		} else {
+			console.log ('Can\'t notify view about update (view fun not found)', this.id);
+		}
 	},
 
 	dispose: function () {
