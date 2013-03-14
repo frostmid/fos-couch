@@ -138,6 +138,10 @@ _.extend (module.exports.prototype, {
 	},
 
 	requestCouchDb: function (params) {
+		if (params.limit == '0') {
+			return {rows: []};
+		}
+
 		return request ({
 			method: params.keys ? 'POST' : 'GET',
 			url: applyParams (this.view.url, params),
