@@ -44,6 +44,10 @@ function applyParams (url, params) {
 		filterParams (params)
 	);
 
+	if (params.reduce) {
+		delete params.limit;
+	}
+
 	// TOFIX: Dirty hack
 	if (params.keys && params.reduce) {
 		result += '&group=true';
@@ -60,6 +64,7 @@ function autoReduce (params) {
 	delete reduceParams ['include_docs'];
 	delete reduceParams ['limit'];
 	delete reduceParams ['skip'];
+	delete reduceParams ['autoreduce'];
 
 	return reduceParams;
 }
@@ -107,6 +112,8 @@ function _ftiSearchString (str) {
 _.extend (module.exports.prototype, {
 	tag: 'fragment',
 
+	disposeDelay: 1000 * 30,
+
 	fetch: function () {
 		var params = this.params;
 
@@ -122,7 +129,8 @@ _.extend (module.exports.prototype, {
 
 						return _.extend (responses [0], {
 							summary: summary,
-							total_rows: summary.count || summary.total_rows
+							total_rows: summary.count || summary.total_rows,
+							update_seq: responses [1].update_seq
 						});
 					} else {
 						return _.extend (responses [0], {
@@ -139,7 +147,7 @@ _.extend (module.exports.prototype, {
 
 	requestCouchDb: function (params) {
 		if (params.limit == '0') {
-			return {rows: []};
+			return {rows: [], total_rows: 0, offset: 0, update_seq: null};
 		}
 
 		return request ({

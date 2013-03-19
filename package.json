@@ -9,8 +9,8 @@
 	"version": "0.1.1",
 	"main": "index.js",
 	"dependencies": {
-		"lodash": "0.10.x",
-		"q": "0.8.x",
+		"lodash": "*",
+		"q": "*",
 		"fos-mixin": "git://github.com/lyxsus/fos-mixin.git",
 		"fos-request": "git://github.com/lyxsus/fos-request.git",
 		"fos-json-http-stream": "git://github.com/lyxsus/fos-json-http-stream.git",

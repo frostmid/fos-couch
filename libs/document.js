@@ -30,6 +30,8 @@ mixin (module.exports);
 _.extend (module.exports.prototype, {
 	data: null,
 	
+	disposeDelay: 1000 * 30,
+
 	tag: 'document',
 
 	fetch: function () {
