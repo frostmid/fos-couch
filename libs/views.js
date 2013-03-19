@@ -13,8 +13,6 @@ mixin (module.exports);
 
 
 _.extend (module.exports.prototype, {
-	tag: 'views',
-
 	key: function (design, view) {
 		return design + '/' + view;
 	},

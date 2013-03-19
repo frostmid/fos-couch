@@ -14,8 +14,6 @@ module.exports = function (database) {
 mixin (module.exports);
 
 _.extend (module.exports.prototype, {
-	tag: 'documents',
-	
 	get: function (id) {
 		if (!this.has (id)) {
 			// console.log ('get', this.database.name, id);

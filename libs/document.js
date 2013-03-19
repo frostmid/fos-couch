@@ -31,9 +31,7 @@ _.extend (module.exports.prototype, {
 	data: null,
 	
 	disposeDelay: 1000 * 30,
-
-	tag: 'document',
-
+	
 	fetch: function () {
 		return request ({
 			url: this.url,

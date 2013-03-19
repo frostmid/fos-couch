@@ -24,8 +24,6 @@ module.exports = function (settings) {
 mixin (module.exports);
 
 _.extend (module.exports.prototype, {
-	tag: 'server',
-
 	settings: {
 		secure: false,
 		host: 'localhost',

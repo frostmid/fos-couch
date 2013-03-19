@@ -110,8 +110,6 @@ function _ftiSearchString (str) {
 
 
 _.extend (module.exports.prototype, {
-	tag: 'fragment',
-
 	disposeDelay: 1000 * 30,
 
 	fetch: function () {

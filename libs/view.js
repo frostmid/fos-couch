@@ -22,6 +22,8 @@ module.exports = function (views, id, design, view) {
 		'/_view/' + encodeURIComponent (view);
 
 	this.fragments = {};
+
+	this.ddocChanged = _.bind (this.ddocChanged, this);
 };
 
 
@@ -29,8 +31,6 @@ mixin (module.exports);
 
 
 _.extend (module.exports.prototype, {
-	tag: 'view',
-	
 	designDoc: null,
 
 	fetch: function () {
@@ -39,11 +39,13 @@ _.extend (module.exports.prototype, {
 
 	fetched: function (designDoc) {
 		(this.designDoc = designDoc).lock (this)
-			.on ('change', _.bind (function () {
-				_.each (this.fragments, function (fragment) {
-					fragment.refetch ();
-				});
-			}, this));
+			.on ('change', this.ddocChanged);
+	},
+
+	ddocChanged: function () {
+		_.each (this.fragments, function (fragment) {
+			fragment.refetch ();
+		});
 	},
 
 	key: function (params) {
@@ -101,6 +103,7 @@ _.extend (module.exports.prototype, {
 	dispose: function () {
 		this.views.unset (this.id);
 
+		this.designDoc.removeListener ('change', this.ddocChanged);
 		this.designDoc.release (this);
 
 		this.cleanup ();
