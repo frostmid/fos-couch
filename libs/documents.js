@@ -28,15 +28,10 @@ _.extend (module.exports.prototype, {
 		delete this.docs [id];
 	},
 
-	create: function () {
-		var designDocId, data,
-			url = this.database.url;
+	create: function (designDocId, data, auth) {
+		var url = this.database.url;
 
-		if (arguments.length == 1) {
-			data = arguments [0];
-		} else {
-			data = arguments [1];
-
+		if (designDocId) {
 			url +=	'_design/' + encodeURIComponent (arguments [0]) +
 					'/_update/' + encodeURIComponent (data.type);
 		}
@@ -49,7 +44,7 @@ _.extend (module.exports.prototype, {
 			headers: {
 				'content-type': 'application/json'
 			},
-			auth: this.database.server.settings.auth	// TODO: Bypass client authorization tokens
+			auth: auth || this.database.server.settings.auth	// TODO: Bypass client authorization tokens
 		})
 			.then (_.bind (function (resp) {
 				return this.get (resp.id);

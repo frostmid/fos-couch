@@ -5,7 +5,7 @@ var _ = require ('lodash'),
 
 function filterDoc (data) {
 	var result = {},
-		allowed = ['_id', '_rev', '_attachments'];
+		allowed = ['_id', '_rev', '_attachments', '_deleted'];
 
 	for (var i in data) {
 		if (i.substring (0, 1) == '_' && allowed.indexOf (i) === -1) {
@@ -93,6 +93,7 @@ _.extend (module.exports.prototype, {
 			},
 			auth: this.database.server.settings.auth	// TODO: This should be passed from client
 		})
+			.fail (_.bind (this.returnError, this))
 			.then (_.bind (this.returnNotReady, this))
 			.then (_.bind (this.ready, this));
 	},
