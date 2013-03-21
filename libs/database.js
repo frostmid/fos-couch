@@ -50,7 +50,7 @@ _.extend (module.exports.prototype, {
 
 		url = this.url + '_changes?' + querystring.stringify (params);
 
-		(new JsonHttpStream (url))
+		(new JsonHttpStream (url, this.server.settings.auth))
 			.on ('error', console.error)
 			.on ('data', _.bind (this.handleEvent, this))
 			.on ('end', _.bind (function () {
@@ -62,7 +62,7 @@ _.extend (module.exports.prototype, {
 	handleEvent: function (event) {
 		this.info.update_seq = event.seq || event.last_seq;
 
-		
+		console.log (event);
 
 		if (event.doc) {
 			// console.log ('handle event', event);
