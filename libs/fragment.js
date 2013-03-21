@@ -210,7 +210,7 @@ _.extend (module.exports.prototype, {
 		delete json ['update_seq'];
 
 		json ['type'] = this.params.type;
-		json.options = this.params;
+		json.options = this.params.options;
 
 		return json;
 	},
@@ -221,7 +221,7 @@ _.extend (module.exports.prototype, {
 			total_rows: json.total_rows || 0,
 			offset: this.params.skip || 0,
 			type: this.params.type,
-			options: this.params,
+			options: this.params.options,
 			rows: _.map (json.rows, function (row) {
 				return {
 					id: row.id,
