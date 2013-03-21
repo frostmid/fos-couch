@@ -113,7 +113,8 @@ _.extend (module.exports.prototype, {
 	disposeDelay: 1000 * 30,
 
 	fetch: function () {
-		var params = this.params;
+		var params = this.params,
+			self = this;
 
 		if (params.fti) {
 			return this.requestCouchDbLucene (params)
@@ -123,16 +124,22 @@ _.extend (module.exports.prototype, {
 				.fail (console.error)
 				.then (function (responses) {
 					if (responses [1].rows.length) {
-						var summary = responses [1].rows [0].value;
+						var summary = responses [1].rows [0].value,
+							update_seq = responses [1].update_seq;
+
+						if (!update_seq) {
+							update_seq = self.view.views.database.info.update_seq;
+						}
 
 						return _.extend (responses [0], {
 							summary: summary,
 							total_rows: summary.count || summary.total_rows,
-							update_seq: responses [1].update_seq
+							update_seq: update_seq
 						});
 					} else {
 						return _.extend (responses [0], {
-							total_rows: 0
+							total_rows: 0,
+							update_seq: self.view.views.database.info.update_seq
 						});
 					}
 				})
