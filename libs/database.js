@@ -62,8 +62,6 @@ _.extend (module.exports.prototype, {
 	handleEvent: function (event) {
 		this.info.update_seq = event.seq || event.last_seq;
 
-		console.log (event);
-
 		if (event.doc) {
 			// console.log ('handle event', event);
 			try {
