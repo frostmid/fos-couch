@@ -61,27 +61,22 @@ _.extend (module.exports.prototype, {
 		return this.data [key] != undefined;
 	},
 
-	remove: function () {
-		return this.save ({
+	remove: function (sign) {
+		this.merge ({
 			_deleted: true
 		});
+
+		return this.save (null, sign);
 	},
 
-	save: function () {
-		var designDocId, data,
-			url = this.url;
-
-		if (arguments.length == 1) {
-			this.merge (arguments [0]);
-		} else {
-			this.merge (arguments [1]);
-
-			url = this.database.url + '_design/' + encodeURIComponent (arguments [0]) +
+	save: function (designDocId, sign) {
+		var url = this.url;
+			
+		if (designDocId) {
+			url = this.database.url + '_design/' + encodeURIComponent (designDocId) +
 				'/_update/' + encodeURIComponent (this.data.type) +
 				'/' + encodeURIComponent (this.data._id);
 		}
-
-		// this.isReady = false;
 
 		return request ({
 			url: url,
@@ -91,22 +86,24 @@ _.extend (module.exports.prototype, {
 			headers: {
 				'content-type': 'application/json'
 			},
-			auth: this.database.server.settings.auth	// TODO: This should be passed from client
+			auth: sign.auth,
+			oauth: sign.oauth,
 		})
 			.fail (_.bind (this.returnError, this))
 			.then (_.bind (this.returnNotReady, this))
 			.then (_.bind (this.ready, this));
 	},
 
-	getAttachment: function (name) {
+	getAttachment: function (name, sign) {
 		return request ({
 			url: this.url + encodeURIComponent (name),
-			auth: this.database.server.settings.auth,
+			auth: sign.auth,
+			oauth: sign.oauth,
 			returnRequest: true
 		});
 	},
 
-	saveAttachment: function (attachment) {
+	saveAttachment: function (attachment, sign) {
 		return request ({
 			url: this.url + encodeURIComponent (attachment.name) + '?rev=' + this.get ('_rev'),
 			accept: 'application/json',
@@ -115,19 +112,21 @@ _.extend (module.exports.prototype, {
 			headers: {
 				'content-type': attachment.contentType
 			},
-			auth: this.database.server.settings.auth	// TODO: This should be passed from client
+			auth: sign.auth,
+			oauth: sign.oauth,
 		})
 			.fail (_.bind (this.returnError, this))
 			.then (_.bind (this.returnNotReady, this))
 			.then (_.bind (this.ready, this));
 	},
 
-	removeAttachment: function (name) {
+	removeAttachment: function (name, sign) {
 		return request ({
 			url: this.url + encodeURIComponent (name) + '?rev=' + this.get ('_rev'),
 			accept: 'application/json',
 			method: 'DELETE',
-			auth: this.database.server.settings.auth	// TODO: This should be passed from client
+			auth: sign.auth,
+			oauth: sign.oauth,
 		})
 			.fail (_.bind (this.returnError, this))
 			.then (_.bind (this.returnNotReady, this))

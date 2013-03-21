@@ -5,9 +5,16 @@ var vows = require ('vows'),
 	_  = require ('lodash'),
 	Server = require ('../index.js');
 
+var signature = {
+	auth: {
+		username: 'lyxsus@gmail.com',
+		password: 'letmein'
+	}
+};
+
 var settings = {
 	secure: false,
-	host: '89.179.119.16',
+	host: 'localhost',
 	port: 5984,
 	_oauth: {
 		consumer_key: "61a712f6c38206b3c78b-1",
@@ -15,10 +22,7 @@ var settings = {
 		token: "personal-2ca6ab4d2f91a8d84087-1",
 		token_secret: "0ecc8b3c04d821cc7b6b-1"
 	},
-	auth: {
-		username: 'lyxsus@gmail.com',
-		password: 'letmein'
-	}
+	auth: signature.auth
 };
 
 
@@ -88,7 +92,7 @@ vows.describe ('fos-couch/general').addBatch ({
 							type: 'urn:types/47c60ae3261a34fabc2cd2a7e1ea7d77'
 						};
 
-					Q.when (database.documents.create ('urn:debug:test', data))
+					Q.when (database.documents.create ('urn:debug:test', data, signature))
 						.then (function (doc) {
 							that.callback (null, doc);
 						})
@@ -123,7 +127,8 @@ vows.describe ('fos-couch/general').addBatch ({
 						Q.when (doc.ready ())
 							.then (function (doc) {
 								// console.log ('!!!', 'update doc', doc);
-								doc.save ('urn:debug:test', {title: 'title changed'});
+								doc.merge ({title: 'title changed'});
+								return doc.save ('urn:debug:test', signature);
 							})
 							.then (function (doc) {
 								that.callback (null, doc);
@@ -146,7 +151,7 @@ vows.describe ('fos-couch/general').addBatch ({
 							.then (function () {
 								doc.once ('change', function () {
 									// console.log ('!!!', 'remove doc');
-									doc.remove ()
+									doc.remove (signature)
 										.then (function (arg) {
 											that.callback (null, arg);
 										})

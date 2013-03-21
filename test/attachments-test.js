@@ -6,9 +6,16 @@ var vows = require ('vows'),
 	_  = require ('lodash'),
 	Server = require ('../index.js');
 
+var signature = {
+	auth: {
+		username: 'lyxsus',
+		password: 'letmein'
+	}
+};
+
 var settings = {
 	secure: false,
-	host: '89.179.119.16',
+	host: '127.0.0.1',
 	port: 5984,
 	_oauth: {
 		consumer_key: "61a712f6c38206b3c78b-1",
@@ -16,10 +23,7 @@ var settings = {
 		token: "personal-2ca6ab4d2f91a8d84087-1",
 		token_secret: "0ecc8b3c04d821cc7b6b-1"
 	},
-	auth: {
-		username: 'lyxsus',
-		password: 'letmein'
-	}
+	auth: signature.auth
 };
 
 vows.describe ('fos-couch/attachments').addBatch ({
@@ -55,7 +59,7 @@ vows.describe ('fos-couch/attachments').addBatch ({
 					name: 'readme.txt',
 					contentType: 'text/plain',
 					body: stream
-				})
+				}, signature)
 					.then (function (doc) {
 						that.callback (null, doc);
 					})
@@ -73,7 +77,7 @@ vows.describe ('fos-couch/attachments').addBatch ({
 
 					Q.when (doc.ready ())
 						.then (function () {
-							return doc.getAttachment ('readme.txt');	
+							return doc.getAttachment ('readme.txt', signature);	
 						})
 						.then (function (stream) {
 							that.callback (null, stream);
@@ -92,7 +96,7 @@ vows.describe ('fos-couch/attachments').addBatch ({
 
 						Q.when (doc.ready ())
 							.then (function () {
-								return doc.removeAttachment ('readme.txt');
+								return doc.removeAttachment ('readme.txt', signature);
 							})
 							.then (function (arg) {
 								that.callback (null, arg);

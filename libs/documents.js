@@ -28,12 +28,12 @@ _.extend (module.exports.prototype, {
 		delete this.docs [id];
 	},
 
-	create: function (designDocId, data, auth) {
+	create: function (designDocId, data, sign) {
 		var url = this.database.url;
 
 		if (designDocId) {
 			url +=	'_design/' + encodeURIComponent (arguments [0]) +
-					'/_update/' + encodeURIComponent (data.type);
+				'/_update/' + encodeURIComponent (data.type);
 		}
 
 		return request ({
@@ -44,11 +44,11 @@ _.extend (module.exports.prototype, {
 			headers: {
 				'content-type': 'application/json'
 			},
-			auth: auth || this.database.server.settings.auth	// TODO: Bypass client authorization tokens
+			auth: sign.auth,
+			oauth: sign.oauth
 		})
 			.then (_.bind (function (resp) {
 				return this.get (resp.id);
-				
 			}, this))
 	},
 
