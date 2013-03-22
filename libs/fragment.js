@@ -194,6 +194,10 @@ _.extend (module.exports.prototype, {
 		url += '?q=' + encodeURIComponent (search);
 		url += '&stale=ok';
 
+		if (params.include_docs) {
+			url += '&include_docs=true';
+		}
+
 		return request ({
 			method: params.keys ? 'POST' : 'GET',
 			url: url,
@@ -226,7 +230,7 @@ _.extend (module.exports.prototype, {
 				return {
 					id: row.id,
 					key: row.score,
-					// doc: row.doc
+					doc: row.doc || null
 				};
 			})
 		};
