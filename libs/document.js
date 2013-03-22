@@ -23,6 +23,8 @@ module.exports = function (documents, id) {
 	this.database = documents.database.lock (this);
 	this.id = id;
 	this.url = this.database.url + encodeURIComponent (id) + '/';
+
+	this.setMaxListeners (1004);
 };
 
 mixin (module.exports);

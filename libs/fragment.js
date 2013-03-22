@@ -11,7 +11,7 @@ module.exports = function (view, id, params) {
 	this.view = view.lock (this);
 	this.params = params;
 
-	// this.refetch = _.throttle (this.refetch, 50, true);
+	this.setMaxListeners (1003);
 };
 
 mixin (module.exports);

@@ -81,7 +81,7 @@ _.extend (module.exports.prototype, {
 						.fail (console.error)
 						.done ();
 				} else {
-					console.log ('missing document', event.id);
+					// console.log ('missing document', event.id);
 					_.each (this.views.views, function (view) {
 						view.notify (event);
 					});
