@@ -30,7 +30,7 @@ mixin (module.exports);
 _.extend (module.exports.prototype, {
 	data: null,
 	
-	disposeDelay: 1000 * 30,
+	disposeDelay: 1000,
 	
 	fetch: function () {
 		return request ({

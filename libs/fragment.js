@@ -110,7 +110,7 @@ function _ftiSearchString (str) {
 
 
 _.extend (module.exports.prototype, {
-	disposeDelay: 1000 * 30,
+	disposeDelay: 1000,
 
 	fetch: function () {
 		var params = this.params,
