@@ -11,7 +11,6 @@ var _ = require ('lodash'),
 
 
 module.exports = function (server, name) {
-	this.id = 'database #' + name;
 	this.server = server;
 	this.name = name;
 	this.url = this.server.url + encodeURIComponent (name) + '/';
@@ -81,6 +80,11 @@ _.extend (module.exports.prototype, {
 						}, this))
 						.fail (console.error)
 						.done ();
+				} else {
+					console.log ('missing document', event.id);
+					_.each (this.views.views, function (view) {
+						view.notify (event);
+					});
 				}
 			} catch (e) {
 				console.error (e);

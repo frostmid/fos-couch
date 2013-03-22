@@ -194,7 +194,7 @@ _.extend (module.exports.prototype, {
 		url += '?q=' + encodeURIComponent (search);
 		url += '&stale=ok';
 
-		if (params.include_docs) {
+		if (params.include_docs == 'true') {
 			url += '&include_docs=true';
 		}
 

@@ -60,7 +60,8 @@ _.extend (module.exports.prototype, {
 			params.skip,
 			params.fti,
 			params.search,
-			params.autoreduce
+			params.autoreduce == 'true',
+			params.include_docs == 'true'
 		]));
 	},
 
@@ -95,7 +96,9 @@ _.extend (module.exports.prototype, {
 			evaluate (view.map, {
 				emit: function (key, value) {
 					_.each (fragments, function (fragment) {
-						fragment.notify (key);
+						if (fragment.notify (key)) {
+							// TODO: Memoize
+						}
 					});
 				}
 			}) (event.doc);

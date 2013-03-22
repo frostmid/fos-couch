@@ -3,8 +3,6 @@ var _ = require ('lodash'),
 	mixin = require ('fos-mixin');
 
 module.exports = function (database) {
-	this.id = 'views #' + database.name;
-
 	this.database = database;
 	this.views = {};
 };
