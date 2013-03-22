@@ -56,7 +56,9 @@ _.extend (module.exports.prototype, {
 			params.endkey,
 			params.descending,
 			params.limit,
-			params.skip
+			params.skip,
+			params.fti,
+			params.search
 		]));
 	},
 
