@@ -97,7 +97,7 @@ _.extend (module.exports.prototype, {
 				emit: function (key, value) {
 					_.each (fragments, function (fragment) {
 						if (fragment.notify (key)) {
-							// TODO: Memoize
+							fragments = _.without (fragment);
 						}
 					});
 				}
