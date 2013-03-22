@@ -11,7 +11,7 @@ module.exports = function (view, id, params) {
 	this.view = view.lock (this);
 	this.params = params;
 
-	this.refetch = _.throttle (this.refetch, 1000);		// TODO: Debug that
+	// this.refetch = _.throttle (this.refetch, 50, true);
 };
 
 mixin (module.exports);
@@ -250,9 +250,8 @@ _.extend (module.exports.prototype, {
 	},
 
 	notify: function (key) {
-		// console.log ('fragment notify', key, this.params.startkey);
 		if (!this.disposing && _match (key, this.params)) {
-			this.refetch ();
+			return this.refetch ();
 		}
 	},
 

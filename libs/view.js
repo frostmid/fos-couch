@@ -1,4 +1,5 @@
 var _ = require ('lodash'),
+	Q = require ('q'),
 
 	mixin = require ('fos-mixin'),
 	request = require ('fos-request'),
@@ -58,7 +59,8 @@ _.extend (module.exports.prototype, {
 			params.limit,
 			params.skip,
 			params.fti,
-			params.search
+			params.search,
+			params.autoreduce
 		]));
 	},
 
@@ -82,7 +84,7 @@ _.extend (module.exports.prototype, {
 
 	notify: function (event) {
 		var fragments = _.filter (this.fragments, function (fragment) {
-			return !fragment.fetching && !fragment.params.fti;
+			return !fragment.params.fti;
 		});
 
 		if (!fragments.length) return;
@@ -94,7 +96,7 @@ _.extend (module.exports.prototype, {
 				emit: function (key, value) {
 					_.each (fragments, function (fragment) {
 						fragment.notify (key);
-					})
+					});
 				}
 			}) (event.doc);
 		} else {
