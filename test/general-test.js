@@ -156,7 +156,6 @@ vows.describe ('fos-couch/general').addBatch ({
 											that.callback (null, arg);
 										})
 										.fail (function (arg) {
-
 											that.callback (null, arg);
 										})
 										.done ();
@@ -166,7 +165,6 @@ vows.describe ('fos-couch/general').addBatch ({
 					},
 
 					'not found': function (doc) {
-						// console.log (doc);
 						assert (doc.error, 'not_found');
 					}
 				}

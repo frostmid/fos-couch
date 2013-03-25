@@ -91,9 +91,9 @@ _.extend (module.exports.prototype, {
 			auth: sign.auth,
 			oauth: sign.oauth,
 		})
-			.fail (_.bind (this.returnError, this))
 			.then (_.bind (this.returnNotReady, this))
-			.then (_.bind (this.ready, this));
+			.then (_.bind (this.ready, this))
+			.fail (_.bind (this.returnError, this));
 	},
 
 	getAttachment: function (name, sign) {
