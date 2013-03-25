@@ -66,7 +66,22 @@ _.extend (module.exports.prototype, {
 		if (event.doc) {
 			// console.log ('handle event', event);
 			try {
-				if (this.documents.has (event.id)) {
+				if (event.doc.meta && event.doc.meta.prev_rev) {
+					var self = this;
+
+					this.documentRevision (event.id, event.doc.meta.prev_rev)
+						.then (function (doc) {
+							var previousEvent = _.extend ({}, event, {doc: doc});
+							_.each (self.views.views, function (view) {
+								view.notify (previousEvent);
+								view.notify (event);
+							});
+						})
+						.fail (function (error) {
+							console.error ('Could not fetch previous revision', error);
+						})
+						.done ();
+				} else if (this.documents.has (event.id)) {
 					Q.when (this.documents.get (event.id))
 						.then (_.bind (function (doc) {
 							var previousEvent = _.extend ({}, event, {doc: doc.data});
@@ -81,7 +96,6 @@ _.extend (module.exports.prototype, {
 						.fail (console.error)
 						.done ();
 				} else {
-					// console.log ('missing document', event.id);
 					_.each (this.views.views, function (view) {
 						view.notify (event);
 					});
@@ -89,12 +103,15 @@ _.extend (module.exports.prototype, {
 			} catch (e) {
 				console.error (e);
 			}
-			
-			_.each (this.views.views, function (view) {
-				// TODO: Fetch previous element
-				view.notify (event);
-			});
 		}
+	},
+
+	documentRevision: function (id, rev) {
+		return request ({
+			url: this.url + encodeURIComponent (id) + '/?rev=' + rev,
+			auth: this.server.settings.auth,
+			accept: 'application/json'
+		});
 	},
 
 	dispose: function () {
