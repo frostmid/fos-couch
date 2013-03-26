@@ -1,5 +1,5 @@
 var _ = require ('lodash'),
-	Q = require ('q'),
+	Promises = require ('vow'),
 	querystring = require ('querystring'),
 
 	JsonHttpStream = require ('fos-json-http-stream'),
@@ -82,7 +82,7 @@ _.extend (module.exports.prototype, {
 						})
 						.done ();
 				} else if (this.documents.has (event.id)) {
-					Q.when (this.documents.get (event.id))
+					Promises.when (this.documents.get (event.id))
 						.then (_.bind (function (doc) {
 							var previousEvent = _.extend ({}, event, {doc: doc.data});
 

@@ -10,7 +10,7 @@
 	"main": "index.js",
 	"dependencies": {
 		"lodash": "*",
-		"q": "*",
+		"vow": "*",
 		"fos-mixin": "git://github.com/lyxsus/fos-mixin.git",
 		"fos-request": "git://github.com/lyxsus/fos-request.git",
 		"fos-json-http-stream": "git://github.com/lyxsus/fos-json-http-stream.git",

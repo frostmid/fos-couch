@@ -1,6 +1,6 @@
 var querystring = require ('querystring'),
 	_ = require ('lodash'),
-	Q = require ('q'),
+	Promises = require ('vow'),
 
 	request = require ('fos-request'),
 	mixin = require ('fos-mixin');
@@ -120,7 +120,7 @@ _.extend (module.exports.prototype, {
 			return this.requestCouchDbLucene (params)
 				.then (_.bind (this.formatFullText, this))
 		} if (params.autoreduce) {
-			return Q.all ([this.requestCouchDb (params), this.requestCouchDb (autoReduce (params))])
+			return Promises.all ([this.requestCouchDb (params), this.requestCouchDb (autoReduce (params))])
 				.fail (console.error)
 				.then (function (responses) {
 					if (responses [1].rows.length) {

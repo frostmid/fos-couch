@@ -1,5 +1,5 @@
 var _ = require ('lodash'),
-	Q = require ('q'),
+	Promises = require ('vow'),
 
 	mixin = require ('fos-mixin'),
 	request = require ('fos-request'),

@@ -1,4 +1,4 @@
-var Q = require ('q'),
+var Promises = require ('vow'),
 	_ = require ('lodash'),
 
 	JsonHttpStream = require ('fos-json-http-stream'),
@@ -7,7 +7,7 @@ var Q = require ('q'),
 
 	Database = require ('./database');
 
-Q.longStackJumpLimit = 0;
+Promises.longStackJumpLimit = 0;
 
 function url (settings) {
 	return (settings.secure ? 'https' : 'http') + '://' + settings.host + ':' + settings.port + '/';
@@ -45,11 +45,11 @@ _.extend (module.exports.prototype, {
 			this.stream (settings);
 		}, this);
 
-		var deferred = Q.defer ();
+		var deferred = Promises.promise ();
 
 		(this.updates = new JsonHttpStream (url))
 			.on ('connect', _.bind (function () {
-				deferred.resolve (this);
+				deferred.fulfill (this);
 			}, this))
 
 			.on ('error', function (error) {
@@ -64,7 +64,7 @@ _.extend (module.exports.prototype, {
 			})
 			.fetch ();
 
-		return deferred.promise;
+		return deferred;
 	},
 
 	has: function (name) {
@@ -73,7 +73,7 @@ _.extend (module.exports.prototype, {
 
 	notify: function (event) {
 		if (this.has (event.db)) {
-			Q.when (this.database (event.db))
+			Promises.when (this.database (event.db))
 				.then (function (database) {
 					database.notify ();
 				})
