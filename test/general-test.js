@@ -169,6 +169,78 @@ vows.describe ('fos-couch/general').addBatch ({
 					}
 				}
 			}
+		},
+
+		'uuids': {
+			'topic': function (server) {
+				var that = this,
+					success = function (topic) {
+						that.callback (null, topic);
+					};
+
+				Q.when (server.uuids (10))
+					.fail (that.callback)
+					.then (success)
+					.done ();
+			},
+
+			'ok': function (result) {
+				assert.equal (result.length, 10);
+			}
+		},
+
+		'uuid': {
+			'topic': function (server) {
+				var that = this,
+					success = function (topic) {
+						that.callback (null, topic);
+					};
+
+				Q.when (server.uuid ())
+					.fail (that.callback)
+					.then (success)
+					.done ();
+			},
+
+			'ok': function (result) {
+				assert.equal (typeof result, 'string');
+			}
+		},
+
+		'create database': {
+			'topic': function (server) {
+				var that = this,
+					success = function (topic) {
+						that.callback (null, topic);
+					};
+
+				Q.when (server.create ('only-for-test-db', signature))
+					.fail (that.callback)
+					.then (success)
+					.done ();
+			},
+
+			'ok': function (database) {
+				assert.isNull (database.error);
+			},
+
+			'remove database': {
+				'topic': function (database) {
+					var that = this,
+					success = function (topic) {
+						that.callback (null, topic);
+					};
+
+					Q.when (database.remove (signature))
+						.fail (that.callback)
+						.then (success)
+						.done ();
+				},
+
+				'ok': function (result) {
+					assert.isTrue (result.ok);
+				}
+			}
 		}
 	}
 }).export (module);

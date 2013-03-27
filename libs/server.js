@@ -92,5 +92,46 @@ _.extend (module.exports.prototype, {
 
 	unset: function (name) {
 		delete this.databases [name];
+	},
+
+	uuids: function (count) {
+		count = count || 1;
+
+		return request ({
+			url: this.url + '_uuids?count=' + count,
+			accept: 'application/json'
+		})
+			.then (function (result) {
+				return result.uuids;
+			});
+	},
+
+	uuid: function () {
+		return this.uuids ()
+			.then (function (uuids) {
+				return uuids [0];
+			});
+	},
+
+	create: function (name, sign) {
+		var self = this;
+
+		return request ({
+			url: this.url + encodeURIComponent (name),
+			method: 'PUT',
+			accept: 'application/json',
+			auth: sign.auth,
+			oauth: sign.oauth
+		})
+			.then (function (result) {
+				return self.database (name);
+			})
+			.fail (function (error) {
+				if (error.error == 'file_exists') {
+					return self.database (name);
+				} else {
+					return Promises.reject (error);
+				}
+			});
 	}
 });

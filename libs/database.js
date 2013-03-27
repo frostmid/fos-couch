@@ -82,12 +82,15 @@ _.extend (module.exports.prototype, {
 						})
 						.done ();
 				} else if (this.documents.has (event.id)) {
+					_.each (this.views.views, function (view) {
+						view.notify (event);
+					});
+
 					Promises.when (this.documents.get (event.id))
 						.then (_.bind (function (doc) {
 							var previousEvent = _.extend ({}, event, {doc: doc.data});
 
 							_.each (this.views.views, function (view) {
-								view.notify (previousEvent);
 								view.notify (event);
 							});
 
@@ -126,5 +129,21 @@ _.extend (module.exports.prototype, {
 		this.documents = null;
 		this.views = null;
 		this.server = null;
+	},
+
+	remove: function (sign) {
+		return request ({
+			url: this.url,
+			method: 'DELETE',
+			accept: 'application/json',
+			auth: sign.auth,
+			oauth: sign.oauth
+		});
 	}
+
+	/*
+	replicate: function () {
+		// TODO: Replicate database
+	}
+	*/
 });
