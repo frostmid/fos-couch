@@ -64,47 +64,50 @@ _.extend (module.exports.prototype, {
 		this.info.update_seq = event.seq || event.last_seq;
 
 		if (event.doc) {
-			// console.log ('handle event', event);
 			try {
+				_.each (this.views.views, function (view) {
+					view.notify (event);
+				});
+
+				var fetchingPrevious = false;
 				if (event.doc.meta && event.doc.meta.prev_rev) {
 					var self = this;
+
+					fetchingPrevious = true;
 
 					this.documentRevision (event.id, event.doc.meta.prev_rev)
 						.then (function (doc) {
 							var previousEvent = _.extend ({}, event, {doc: doc});
 							_.each (self.views.views, function (view) {
 								view.notify (previousEvent);
-								view.notify (event);
 							});
 						})
 						.fail (function (error) {
 							console.error ('Could not fetch previous revision', error);
 						})
 						.done ();
-				} else if (this.documents.has (event.id)) {
-					_.each (this.views.views, function (view) {
-						view.notify (event);
-					});
-
+				}
+				
+				if (this.documents.has (event.id)) {
 					Promises.when (this.documents.get (event.id))
 						.then (_.bind (function (doc) {
+							// TODO: Compare revisions
+
 							var previousEvent = _.extend ({}, event, {doc: doc.data});
 
-							_.each (this.views.views, function (view) {
-								view.notify (event);
-							});
-
 							doc.update (event.doc);
+
+							if (!fetchingPrevious) {
+								_.each (this.views.views, function (view) {
+									view.notify (previousEvent);
+								});
+							}
 						}, this))
 						.fail (console.error)
 						.done ();
-				} else {
-					_.each (this.views.views, function (view) {
-						view.notify (event);
-					});
 				}
 			} catch (e) {
-				console.error (e);
+				console.error ('Failed to handle update event', e);
 			}
 		}
 	},
