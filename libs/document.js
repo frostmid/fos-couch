@@ -136,8 +136,6 @@ _.extend (module.exports.prototype, {
 	},
 
 	dispose: function () {
-		console.log ('#dispose document', this.id)
-
 		this.documents.unset (this.id);
 
 		this.data = null;
