@@ -136,17 +136,10 @@ _.extend (module.exports.prototype, {
 	},
 
 	dispose: function () {
-		// console.log ('#dispose document', this.id)
+		console.log ('#dispose document', this.id)
 
 		this.documents.unset (this.id);
 
-		this.removeAllListeners ();
-		
-
-		this.cleanup ();
-	},
-
-	cleanup: function () {
 		this.data = null;
 		this.documents = null;
 		this.database = null;

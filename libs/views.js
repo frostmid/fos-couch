@@ -34,10 +34,6 @@ _.extend (module.exports.prototype, {
 	},
 
 	dispose: function () {
-		this.cleanup ();
-	},
-
-	cleanup: function () {
 		this.database = null;
 		this.views = null;
 	}

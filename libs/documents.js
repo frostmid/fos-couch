@@ -8,7 +8,7 @@ var _ = require ('lodash'),
 module.exports = function (database) {
 	this.id = 'documents #' + database.name;
 	this.database = database;
-	this.docs = [];
+	this.docs = {};
 };
 
 mixin (module.exports);
@@ -29,7 +29,8 @@ _.extend (module.exports.prototype, {
 	},
 
 	create: function (designDocId, data, sign) {
-		var url = this.database.url;
+		var url = this.database.url,
+			self = this;
 
 		if (designDocId) {
 			url +=	'_design/' + encodeURIComponent (arguments [0]) +
@@ -47,9 +48,9 @@ _.extend (module.exports.prototype, {
 			auth: sign.auth,
 			oauth: sign.oauth
 		})
-			.then (_.bind (function (resp) {
-				return this.get (resp.id);
-			}, this))
+			.then (function (resp) {
+				return self.get (resp.id);
+			})
 	},
 
 	has: function (id) {
@@ -57,10 +58,6 @@ _.extend (module.exports.prototype, {
 	},
 
 	dispose: function () {
-		this.cleanup ();
-	},
-
-	cleanup: function () {
 		this.database = null;
 		this.docs = null;
 	}

@@ -39,6 +39,10 @@ _.extend (module.exports.prototype, {
 	},
 
 	fetched: function (designDoc) {
+		if (this.designDoc) {
+			this.designDoc.removeListener ('change', this.ddocChanged);
+		}
+
 		(this.designDoc = designDoc).lock (this)
 			.on ('change', this.ddocChanged);
 	},
@@ -113,13 +117,12 @@ _.extend (module.exports.prototype, {
 		this.designDoc.removeListener ('change', this.ddocChanged);
 		this.designDoc.release (this);
 
-		this.cleanup ();
-	},
+		this.database.release (this);	// TODO: Check for crash
 
-	cleanup: function () {
 		this.database = null;
 		this.fragments = null;
 		this.views = null;
 		this.designDoc = null;
+		this.ddocChanged = null;
 	}
 });

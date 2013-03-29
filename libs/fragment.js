@@ -257,8 +257,6 @@ _.extend (module.exports.prototype, {
 
 	dispose: function () {
 		this.view.unset (this.id);
-
-		this.removeAllListeners ();
 		
 		this.view.release (this);
 

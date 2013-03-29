@@ -123,8 +123,8 @@ _.extend (module.exports.prototype, {
 	dispose: function () {
 		this.server.unset (this.name);
 
-		this.documents.cleanup ();
-		this.views.cleanup ();
+		this.documents.dispose ();
+		this.views.dispose ();
 		this.cleanup ();
 	},
 
