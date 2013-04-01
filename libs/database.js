@@ -142,11 +142,19 @@ _.extend (module.exports.prototype, {
 			auth: sign.auth,
 			oauth: sign.oauth
 		});
-	}
+	},
 
-	/*
-	replicate: function () {
-		// TODO: Replicate database
+	replicate: function (options, sign) {
+		options.source = this.name;
+
+		return request (_.extend ({
+			url: this.server.url + '_replicate',
+			method: 'POST',
+			body: JSON.stringify (options),
+			accept: 'application/json',
+			headers: {
+				'content-type': 'application/json'
+			}
+		}, sign));
 	}
-	*/
 });

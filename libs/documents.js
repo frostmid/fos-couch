@@ -37,17 +37,15 @@ _.extend (module.exports.prototype, {
 				'/_update/' + encodeURIComponent (data.type);
 		}
 
-		return request ({
+		return request (_.extend ({
 			url: url,
 			method: 'POST',
 			body: JSON.stringify (data),
 			accept: 'application/json',
 			headers: {
 				'content-type': 'application/json'
-			},
-			auth: sign.auth,
-			oauth: sign.oauth
-		})
+			}
+		}, sign))
 			.then (function (resp) {
 				return self.get (resp.id);
 			})
