@@ -92,8 +92,8 @@ _.extend (module.exports.prototype, {
 			oauth: sign.oauth,
 		})
 			.then (_.bind (this.returnNotReady, this))
-			.then (_.bind (this.ready, this))
-			.fail (_.bind (this.returnError, this));
+			.then (_.bind (this.ready, this));
+			// .fail (_.bind (this.returnError, this));
 	},
 
 	getAttachment: function (name, sign) {
@@ -117,7 +117,6 @@ _.extend (module.exports.prototype, {
 			auth: sign.auth,
 			oauth: sign.oauth,
 		})
-			.fail (_.bind (this.returnError, this))
 			.then (_.bind (this.returnNotReady, this))
 			.then (_.bind (this.ready, this));
 	},
@@ -130,7 +129,6 @@ _.extend (module.exports.prototype, {
 			auth: sign.auth,
 			oauth: sign.oauth,
 		})
-			.fail (_.bind (this.returnError, this))
 			.then (_.bind (this.returnNotReady, this))
 			.then (_.bind (this.ready, this));
 	},

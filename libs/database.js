@@ -39,7 +39,10 @@ _.extend (module.exports.prototype, {
 	streaming: false,
 
 	notify: function () {
-		if (this.streaming) return;
+		if (this.streaming) {
+			return;
+		}
+
 		this.streaming = true;
 
 		var params = {
