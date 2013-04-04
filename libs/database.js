@@ -21,6 +21,10 @@ module.exports = function (server, name) {
 
 mixin (module.exports);
 
+function parseRev (rev) {
+	return parseInt (rev.split ('-') [0] || 0);
+}
+
 _.extend (module.exports.prototype, {
 	disposeDelay: 1000,
 	
@@ -94,19 +98,22 @@ _.extend (module.exports.prototype, {
 				if (this.documents.has (event.id)) {
 					Promises.when (this.documents.get (event.id))
 						.then (_.bind (function (doc) {
-							// TODO: Compare revisions
-
 							var previousEvent = _.extend ({}, event, {doc: doc.data});
-
-							doc.update (event.doc);
 
 							if (!fetchingPrevious) {
 								_.each (this.views.views, function (view) {
 									view.notify (previousEvent);
 								});
 							}
+
+							// TODO: Compare revisions
+							if (parseRev (event.doc._rev) > parseRev (doc.get ('_rev'))) {
+								doc.update (event.doc);
+							}
 						}, this))
-						.fail (console.error)
+						.fail (function (error) {
+							console.error ('Could not get document to update info', error);
+						})
 						.done ();
 				}
 			} catch (e) {

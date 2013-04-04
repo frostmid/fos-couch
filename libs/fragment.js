@@ -192,7 +192,7 @@ _.extend (module.exports.prototype, {
 		}
 
 		url += '?q=' + encodeURIComponent (search);
-		url += '&stale=ok';
+		// url += '&stale=ok';
 
 		if (params.include_docs) {
 			url += '&include_docs=true';
@@ -210,7 +210,9 @@ _.extend (module.exports.prototype, {
 	},
 
 	format: function (json) {
-		json ['_rev'] = (json ['update_seq'] || 0) + '-update_seq';
+		var db_update_seq = this.view.database.info.update_seq;
+		
+		json ['_rev'] = (json ['update_seq'] || db_update_seq) + '-update_seq';
 		delete json ['update_seq'];
 
 		json ['type'] = this.params.type;
@@ -245,6 +247,15 @@ _.extend (module.exports.prototype, {
 	},
 
 	fetched: function (data) {
+		// TODO: Check, if rows or summary where changed, don't reemit otherwise
+		/*
+		if (this.data && this.data.rows.length) {
+			if (_.isEqual (previousData, data)) {
+				return;
+			}	
+		}
+		*/
+
 		this.data = data;
 		this.emit ('change');
 	},
