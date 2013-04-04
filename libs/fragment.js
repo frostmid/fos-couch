@@ -247,16 +247,25 @@ _.extend (module.exports.prototype, {
 	},
 
 	fetched: function (data) {
-		// TODO: Check, if rows or summary where changed, don't reemit otherwise
-		/*
-		if (this.data && this.data.rows.length) {
-			if (_.isEqual (previousData, data)) {
-				return;
-			}	
-		}
-		*/
+		var previousData = this.data;
 
 		this.data = data;
+
+		// Don't trigger change, if nothing was changed
+		if (previousData) {
+			if (previousData.rows && data.rows) {
+				if (_.isEqual (previousData.rows, data.rows)) {
+					if (previousData.summary && data.summary) {
+						if (_.isEqual (previousData.summary, data.summary)) {
+							return;
+						}
+					} else {
+						return;
+					}
+				}
+			}
+		}
+		
 		this.emit ('change');
 	},
 
