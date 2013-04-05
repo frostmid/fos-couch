@@ -29,6 +29,10 @@ module.exports = function (documents, id) {
 
 mixin (module.exports);
 
+function parseRev (rev) {
+	return parseInt (rev.split ('-') [0] || 0);
+}
+
 _.extend (module.exports.prototype, {
 	data: null,
 	
@@ -47,6 +51,15 @@ _.extend (module.exports.prototype, {
 	},
 
 	update: function (data) {
+		var previousData = this.data;
+
+		if (previousData) {
+			// Don't update on previous revision
+			if (parseRev (data._rev) <= parseRev (previousData._rev)) {
+				return;
+			}
+		}
+
 		this.data = data;
 		this.emit ('change');
 	},
@@ -97,6 +110,7 @@ _.extend (module.exports.prototype, {
 					self.update (result.doc);
 					this.error = null;
 				} else {
+					console.log ('!!!!', result);
 					return self.returnNotReady ().ready ();
 				}
 			})

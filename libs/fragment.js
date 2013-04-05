@@ -109,6 +109,12 @@ function _ftiSearchString (str) {
 }
 
 
+function parseRev (rev) {
+	return parseInt (rev.split ('-') [0] || 0);
+}
+
+
+
 _.extend (module.exports.prototype, {
 	disposeDelay: 1000,
 
@@ -249,23 +255,19 @@ _.extend (module.exports.prototype, {
 	fetched: function (data) {
 		var previousData = this.data;
 
-		this.data = data;
-
-		// Don't trigger change, if nothing was changed
 		if (previousData) {
-			if (previousData.rows && data.rows) {
-				if (_.isEqual (previousData.rows, data.rows)) {
-					if (previousData.summary && data.summary) {
-						if (_.isEqual (previousData.summary, data.summary)) {
-							return;
-						}
-					} else {
-						return;
-					}
-				}
+			// Don't update on previous revision
+			if (parseRev (data._rev) <= parseRev (previousData._rev)) {
+				return;		
+			}
+
+			// Don't update, if rows and summary are the same
+			if (_.isEqual (previousData.rows, data.rows) && _.isEqual (previousData.summary, data.summary)) {
+				return;
 			}
 		}
-		
+
+		this.data = data;
 		this.emit ('change');
 	},
 

@@ -21,10 +21,6 @@ module.exports = function (server, name) {
 
 mixin (module.exports);
 
-function parseRev (rev) {
-	return parseInt (rev.split ('-') [0] || 0);
-}
-
 _.extend (module.exports.prototype, {
 	disposeDelay: 1000,
 	
@@ -50,7 +46,7 @@ _.extend (module.exports.prototype, {
 		this.streaming = true;
 
 		var params = {
-			timeout: 3 * 1000,
+			timeout: 10 * 1000,
 			include_docs: true,
 			feed: 'continuous',
 			since: this.info.update_seq
@@ -109,10 +105,7 @@ _.extend (module.exports.prototype, {
 								});
 							}
 
-							// Compare revisions
-							if (parseRev (event.changes [0].rev) > parseRev (doc.get ('_rev'))) {
-								doc.update (event.doc);
-							}
+							doc.update (event.doc);
 						}, this))
 						.fail (function (error) {
 							console.error ('Could not get document to update info', error);
