@@ -1,4 +1,5 @@
 var _ = require ('lodash'),
+	Promises = require ('vow'),
 
 	mixin = require ('fos-mixin'),
 	request = require ('fos-request');
@@ -110,11 +111,16 @@ _.extend (module.exports.prototype, {
 					self.update (result.doc);
 					this.error = null;
 				} else {
-					console.log ('!!!!', result);
 					return self.returnNotReady ().ready ();
 				}
 			})
-			// .fail (_.bind (this.returnError, this));
+			.fail (function (error) {
+				if (error.reason == 'conflict') {
+					return this.refetch ();
+				} else {
+					return Promises.reject (error);
+				}
+			});
 	},
 
 	getAttachment: function (name, sign) {
