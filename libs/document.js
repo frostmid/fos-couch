@@ -100,7 +100,7 @@ _.extend (module.exports.prototype, {
 					return self.returnNotReady ().ready ();
 				}
 			})
-			.fail (_.bind (this.returnError, this));
+			// .fail (_.bind (this.returnError, this));
 	},
 
 	getAttachment: function (name, sign) {
