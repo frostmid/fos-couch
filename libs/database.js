@@ -106,8 +106,8 @@ _.extend (module.exports.prototype, {
 								});
 							}
 
-							// TODO: Compare revisions
-							if (parseRev (event.doc._rev) > parseRev (doc.get ('_rev'))) {
+							// Compare revisions
+							if (parseRev (event.changes [0].rev) > parseRev (doc.get ('_rev'))) {
 								doc.update (event.doc);
 							}
 						}, this))
