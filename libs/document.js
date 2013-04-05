@@ -72,7 +72,8 @@ _.extend (module.exports.prototype, {
 	},
 
 	save: function (designDocId, sign) {
-		var url = this.url;
+		var url = this.url,
+			self = this;
 			
 		if (designDocId) {
 			url = this.database.url + '_design/' + encodeURIComponent (designDocId) +
@@ -91,9 +92,14 @@ _.extend (module.exports.prototype, {
 			auth: sign.auth,
 			oauth: sign.oauth,
 		})
-			.then (_.bind (this.returnNotReady, this))
-			.then (_.bind (this.ready, this));
-			// .fail (_.bind (this.returnError, this));
+			.then (function (result) {
+				if (result.doc) {
+					self.update (result.doc);
+				} else {
+					return self.returnNotReady ().ready ();
+				}
+			})
+			.fail (_.bind (this.returnError, this));
 	},
 
 	getAttachment: function (name, sign) {
