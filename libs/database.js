@@ -72,12 +72,15 @@ _.extend (module.exports.prototype, {
 
 		if (event.doc) {
 			try {
-				_.each (this.views.views, function (view) {
-					view.notify (event);
-				});
+				if (this.views) {
+					_.each (this.views.views, function (view) {
+						view.notify (event);
+					});
+				}
 
 				var fetchingPrevious = false;
-				if (event.doc.meta && event.doc.meta.prev_rev) {
+
+				if (this.views && event.doc.meta && event.doc.meta.prev_rev) {
 					var self = this;
 
 					fetchingPrevious = true;
@@ -95,12 +98,12 @@ _.extend (module.exports.prototype, {
 						.done ();
 				}
 				
-				if (this.documents.has (event.id)) {
+				if (this.documents && this.documents.has (event.id)) {
 					Promises.when (this.documents.get (event.id))
 						.then (_.bind (function (doc) {
 							var previousEvent = _.extend ({}, event, {doc: doc.data});
 
-							if (!fetchingPrevious) {
+							if (!fetchingPrevious && this.views) {
 								_.each (this.views.views, function (view) {
 									view.notify (previousEvent);
 								});

@@ -95,6 +95,7 @@ _.extend (module.exports.prototype, {
 			.then (function (result) {
 				if (result.doc) {
 					self.update (result.doc);
+					this.error = null;
 				} else {
 					return self.returnNotReady ().ready ();
 				}
