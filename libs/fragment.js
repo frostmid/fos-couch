@@ -273,7 +273,10 @@ _.extend (module.exports.prototype, {
 
 	notify: function (key) {
 		if (!this.disposing && _match (key, this.params)) {
-			return this.refetch ();
+			return this.refetch ()
+				.fail (function (error) {
+					console.error ('Could not refetch fragment', this.id, 'because of an error', error);
+				});
 		}
 	},
 

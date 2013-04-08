@@ -97,15 +97,15 @@ _.extend (module.exports.prototype, {
 				if (this.documents && this.documents.has (event.id)) {
 					Promises.when (this.documents.get (event.id))
 						.then (_.bind (function (doc) {
+							doc.update (event.doc);
+							
 							var previousEvent = _.extend ({}, event, {doc: doc.data});
 
-							if (!fetchingPrevious && this.views) {
+							if (this.views && !fetchingPrevious) {
 								_.each (this.views.views, function (view) {
 									view.notify (previousEvent);
 								});
 							}
-
-							doc.update (event.doc);
 						}, this))
 						.fail (function (error) {
 							console.error ('Could not get document to update info', error);
