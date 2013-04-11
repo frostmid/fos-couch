@@ -89,7 +89,7 @@ _.extend (module.exports.prototype, {
 							});
 						})
 						.fail (function (error) {
-							console.error ('Could not fetch previous revision', error);
+							console.error ('Could not fetch previous revision', error, event);
 						})
 						.done ();
 				}
