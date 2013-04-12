@@ -99,7 +99,10 @@ _.extend (module.exports.prototype, {
 
 		return request ({
 			url: this.url + '_uuids?count=' + count,
-			accept: 'application/json'
+			accept: 'application/json',
+			headers: {
+				'accept-encoding': 'gzip, deflate'
+			}
 		})
 			.then (function (result) {
 				return result.uuids;
@@ -120,6 +123,9 @@ _.extend (module.exports.prototype, {
 			url: this.url + encodeURIComponent (name),
 			method: 'PUT',
 			accept: 'application/json',
+			headers: {
+				'accept-encoding': 'gzip, deflate'
+			},
 			auth: sign.auth,
 			oauth: sign.oauth
 		})

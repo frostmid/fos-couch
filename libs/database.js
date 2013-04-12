@@ -28,6 +28,9 @@ _.extend (module.exports.prototype, {
 		return request ({
 			url: this.url,
 			accept: 'application/json',
+			headers: {
+				'accept-encoding': 'gzip, deflate'
+			},
 			auth: this.server.settings.auth
 		});
 	},
@@ -122,6 +125,9 @@ _.extend (module.exports.prototype, {
 		return request ({
 			url: this.url + encodeURIComponent (id) + '/?rev=' + rev,
 			auth: this.server.settings.auth,
+			headers: {
+				'accept-encoding': 'gzip, deflate'
+			},
 			accept: 'application/json'
 		});
 	},
@@ -145,6 +151,9 @@ _.extend (module.exports.prototype, {
 			url: this.url,
 			method: 'DELETE',
 			accept: 'application/json',
+			headers: {
+				'accept-encoding': 'gzip, deflate'
+			},
 			auth: sign.auth,
 			oauth: sign.oauth
 		});
@@ -159,7 +168,8 @@ _.extend (module.exports.prototype, {
 			body: JSON.stringify (options),
 			accept: 'application/json',
 			headers: {
-				'content-type': 'application/json'
+				'content-type': 'application/json',
+				'accept-encoding': 'gzip, deflate'
 			}
 		}, sign));
 	}

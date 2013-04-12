@@ -43,6 +43,9 @@ _.extend (module.exports.prototype, {
 		return request ({
 			url: this.url,
 			accept: 'application/json',
+			headers: {
+				'accept-encoding': 'gzip, deflate'
+			},
 			auth: this.database.server.settings.auth	// TODO: Reimplement
 		});
 	},
@@ -101,7 +104,8 @@ _.extend (module.exports.prototype, {
 			method: 'PUT',
 			body: JSON.stringify (filterDoc (this.data)),
 			headers: {
-				'content-type': 'application/json'
+				'content-type': 'application/json',
+				'accept-encoding': 'gzip, deflate'
 			},
 			auth: sign.auth,
 			oauth: sign.oauth,
@@ -126,6 +130,9 @@ _.extend (module.exports.prototype, {
 	getAttachment: function (name, sign) {
 		return request ({
 			url: this.url + encodeURIComponent (name),
+			headers: {
+				'accept-encoding': 'gzip, deflate'
+			},
 			auth: sign.auth,
 			oauth: sign.oauth,
 			returnRequest: true
@@ -139,7 +146,8 @@ _.extend (module.exports.prototype, {
 			method: 'PUT',
 			body: attachment.body,
 			headers: {
-				'content-type': attachment.contentType
+				'content-type': attachment.contentType,
+				'accept-encoding': 'gzip, deflate'
 			},
 			auth: sign.auth,
 			oauth: sign.oauth,
@@ -151,6 +159,9 @@ _.extend (module.exports.prototype, {
 	removeAttachment: function (name, sign) {
 		return request ({
 			url: this.url + encodeURIComponent (name) + '?rev=' + this.get ('_rev'),
+			headers: {
+				'accept-encoding': 'gzip, deflate'
+			},
 			accept: 'application/json',
 			method: 'DELETE',
 			auth: sign.auth,

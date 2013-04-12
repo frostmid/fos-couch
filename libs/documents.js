@@ -43,7 +43,8 @@ _.extend (module.exports.prototype, {
 			body: JSON.stringify (data),
 			accept: 'application/json',
 			headers: {
-				'content-type': 'application/json'
+				'content-type': 'application/json',
+				'accept-encoding': 'gzip, deflate'
 			}
 		}, sign))
 			.then (function (resp) {

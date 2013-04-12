@@ -2,7 +2,6 @@ var _ = require ('lodash'),
 	Promises = require ('vow'),
 
 	mixin = require ('fos-mixin'),
-	request = require ('fos-request'),
 	evaluate = require ('fos-evaluate'),
 	hash = require ('fos-hash'),
 

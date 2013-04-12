@@ -167,7 +167,8 @@ _.extend (module.exports.prototype, {
 			accept: 'application/json',
 			body: params.keys ? JSON.stringify ({keys: params.keys}) : null,
 			headers: {
-				'content-type': 'application/json'
+				'content-type': 'application/json',
+				'accept-encoding': 'gzip, deflate'
 			},
 			auth: this.view.database.server.settings.auth
 		});
