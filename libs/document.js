@@ -114,6 +114,8 @@ _.extend (module.exports.prototype, {
 				if (result.doc) {
 					self.update (result.doc);
 					this.error = null;
+
+					return self.ready ();
 				} else {
 					return self.returnNotReady ().ready ();
 				}
