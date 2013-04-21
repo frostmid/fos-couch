@@ -70,6 +70,8 @@ _.extend (module.exports.prototype, {
 		this.info.update_seq = event.seq || event.last_seq;
 
 		if (event.doc) {
+			// TODO: Debug that
+
 			try {
 				if (this.views) {
 					_.each (this.views.views, function (view) {
@@ -98,22 +100,18 @@ _.extend (module.exports.prototype, {
 				}
 				
 				if (this.documents && this.documents.has (event.id)) {
-					Promises.when (this.documents.get (event.id))
-						.then (_.bind (function (doc) {
-							doc.update (event.doc);
-							
-							var previousEvent = _.extend ({}, event, {doc: doc.data});
+					var doc = this.documents.docs [event.id],
+						previousEvent = _.extend ({}, event, {doc: doc.data});
 
-							if (this.views && !fetchingPrevious) {
-								_.each (this.views.views, function (view) {
-									view.notify (previousEvent);
-								});
-							}
-						}, this))
-						.fail (function (error) {
-							console.error ('Could not get document to update info', error);
-						})
-						.done ();
+					if (!doc.disposing) {
+						doc.update (event.doc);
+					}
+
+					if (this.views && !fetchingPrevious) {
+						_.each (this.views.views, function (view) {
+							view.notify (previousEvent);
+						});
+					}
 				}
 			} catch (e) {
 				console.error ('Failed to handle update event', e);
