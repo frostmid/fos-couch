@@ -104,7 +104,7 @@ _.extend (module.exports.prototype, {
 			method: 'PUT',
 			body: JSON.stringify (filterDoc (this.data)),
 			headers: {
-				'content-type': 'application/json',
+				'content-type': 'application/json; charset=utf-8',
 				'accept-encoding': 'gzip, deflate'
 			},
 			auth: sign.auth,
