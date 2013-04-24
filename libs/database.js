@@ -68,58 +68,61 @@ _.extend (module.exports.prototype, {
 
 	handleEvent: function (event) {
 		this.info.update_seq = event.seq || event.last_seq;
+		if (!event.doc) return;
 
-		if (event.doc) {
-			// TODO: Debug that
+		var previousEvent = _.extend ({}, event, {doc: null});
 
-			try {
-				if (this.views) {
-					_.each (this.views.views, function (view) {
-						view.notify (event);
-					});
-				}
+		if (this.documents && this.documents.has (event.id)) {
+			var doc = this.documents.docs [event.id];
 
-				var fetchingPrevious = false;
+			previousEvent.doc = doc.data;
 
-				if (this.views && event.doc.meta && event.doc.meta.prev_rev) {
-					var self = this;
+			if (!doc.disposing) {
+				doc.update (event.doc);
+			}
+		}
 
-					fetchingPrevious = true;
+		if (this.views) {
+			var notifyViews = _.bind (function (event) {
+				_.each (this.views.views, function (view) {
+					view.notify (event);
+				});
+			}, this);
 
-					this.documentRevision (event.id, event.doc.meta.prev_rev)
-						.then (function (doc) {
-							var previousEvent = _.extend ({}, event, {doc: doc});
-							_.each (self.views.views, function (view) {
-								view.notify (previousEvent);
-							});
+			notifyViews (event);
+
+			if (previousEvent.doc) {
+				notifyViews (previousEvent);
+			} else {
+				var meta = event.doc.meta,
+					docPrevRev = meta ? meta.prev_rev : null,
+					docLastSeq = meta ? meta.last_update_seq : null,
+					promise;
+
+				if (/^1\-/.test (event.doc._rev)) {
+					// Document was just created and has no previous versions
+				} else {
+					if (docPrevRev && (event.seq == docLastSeq - 1)) {
+						promise = this.documentOfRevision (event.id, event.doc.meta.prev_rev);
+					} else {
+						promise = this.documentRevisions (event.id, event.doc._rev);
+					}
+
+					promise
+						.then (function (data) {
+							previousEvent.doc = data;
+							notifyViews (previousEvent);
 						})
 						.fail (function (error) {
 							console.error ('Could not fetch previous revision', error, event.id, event.seq);
 						})
 						.done ();
 				}
-				
-				if (this.documents && this.documents.has (event.id)) {
-					var doc = this.documents.docs [event.id],
-						previousEvent = _.extend ({}, event, {doc: doc.data});
-
-					if (!doc.disposing) {
-						doc.update (event.doc);
-					}
-
-					if (this.views && !fetchingPrevious) {
-						_.each (this.views.views, function (view) {
-							view.notify (previousEvent);
-						});
-					}
-				}
-			} catch (e) {
-				console.error ('Failed to handle update event', e);
 			}
 		}
 	},
 
-	documentRevision: function (id, rev) {
+	documentOfRevision: function (id, rev) {
 		return request ({
 			url: this.url + encodeURIComponent (id) + '/?rev=' + rev,
 			auth: this.server.settings.auth,
@@ -128,6 +131,34 @@ _.extend (module.exports.prototype, {
 			},
 			accept: 'application/json'
 		});
+	},
+
+	documentRevisions: function (id, rev) {
+		return request ({
+			url: this.url + encodeURIComponent (id) + '/?revs=true&rev=' + rev,
+			auth: this.server.settings.auth,
+			headers: {
+				'accept-encoding': 'gzip, deflate'
+			},
+			accept: 'application/json'
+		})
+			.then (function (data) {
+				var tmp = rev.split ('-'),
+					pos = parseInt (tmp [0]),
+					revId = tmp [1],
+					ids = data._revisions.ids;
+
+				for (var i = 0; i < ids.length; i++) {
+					if ((ids [i] == revId) && ids [i + 1]) {
+						return (pos - 1) + '-' + ids [i + 1];
+					}
+				}
+
+				return Promises.reject ('Could not fetch previous revision');
+			})
+			.then (_.bind (function (rev) {
+				return this.documentOfRevision (id, rev);
+			}, this));
 	},
 
 	dispose: function () {
