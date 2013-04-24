@@ -99,8 +99,8 @@ _.extend (module.exports.prototype, {
 			evaluate (view.map, {
 				emit: function (key, value) {
 					_.each (fragments, function (fragment, index) {
-						if (fragment && fragment.notify (key)) {
-							fragments.splice (index);
+						if (fragment) {
+							fragment.notify (key);
 						}
 					});
 				}

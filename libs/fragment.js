@@ -259,7 +259,7 @@ _.extend (module.exports.prototype, {
 		if (previousData) {
 			// Don't update on previous revision
 			if (parseRev (data._rev) <= parseRev (previousData._rev)) {
-				return;		
+				return;
 			}
 
 			// Don't update, if rows and summary are the same

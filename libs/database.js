@@ -59,7 +59,13 @@ _.extend (module.exports.prototype, {
 
 		(new JsonHttpStream (url, this.server.settings.auth))
 			.on ('error', console.error)
-			.on ('data', _.bind (this.handleEvent, this))
+			.on ('data', _.bind (function (event) {
+				try {
+					this.handleEvent (event);
+				} catch (e) {
+					console.log ('Error while handling db update event', e.message, e.stack);
+				}
+			}, this))
 			.on ('end', _.bind (function () {
 				this.streaming = false;
 			}, this))
@@ -119,6 +125,8 @@ _.extend (module.exports.prototype, {
 						.done ();
 				}
 			}
+		} else {
+			console.log ('no views');
 		}
 	},
 
