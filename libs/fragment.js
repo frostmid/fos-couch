@@ -157,7 +157,7 @@ _.extend (module.exports.prototype, {
 	},
 
 	requestCouchDb: function (params) {
-		if (params.limit == '0') {
+		if (params.limit === '0' || params.limit === 0) {
 			return {rows: [], total_rows: 0, offset: 0, update_seq: null};
 		}
 
