@@ -81,7 +81,9 @@ _.extend (module.exports.prototype, {
 		if (this.documents && this.documents.has (event.id)) {
 			var doc = this.documents.docs [event.id];
 
-			previousEvent.doc = doc.data;
+			// TODO: Disable until "document.save ()" will not modify own document attrs,
+			// and even then check revisions to be different.
+			// previousEvent.doc = doc.data;
 
 			if (!doc.disposing) {
 				doc.update (event.doc);
