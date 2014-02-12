@@ -10,12 +10,15 @@
 	"main": "index.js",
 	"dependencies": {
 		"lodash": "*",
-		"vow": "*",
+		"vow": "0.3.x",
 		"fos-mixin": "git://github.com/lyxsus/fos-mixin.git",
 		"fos-request": "git://github.com/lyxsus/fos-request.git",
 		"fos-json-http-stream": "git://github.com/lyxsus/fos-json-http-stream.git",
 		"fos-evaluate": "git://github.com/lyxsus/fos-evaluate.git",
-		"fos-hash": "git://github.com/lyxsus/fos-hash.git"
+		"fos-hash": "git://github.com/lyxsus/fos-hash.git",
+		"carrier": "*",
+		"querystring": "*",
+		"hyperquest": "*"
 	},
 	"devDependencies": {
 		"vows": "0.6.x"
