@@ -11,10 +11,10 @@
 	"dependencies": {
 		"lodash": "*",
 		"vow": "*",
-		"fos-mixin": "git://github.com/lyxsus/fos-mixin.git",
-		"fos-request": "git://github.com/lyxsus/fos-request.git",
-		"fos-evaluate": "git://github.com/lyxsus/fos-evaluate.git",
-		"fos-hash": "git://github.com/lyxsus/fos-hash.git",
+		"fos-mixin": "git://github.com/frostmid/fos-mixin.git",
+		"fos-request": "git://github.com/frostmid/fos-request.git",
+		"fos-evaluate": "git://github.com/frostmid/fos-evaluate.git",
+		"fos-hash": "git://github.com/frostmid/fos-hash.git",
 		"carrier": "*",
 		"querystring": "*",
 		"hyperquest": "*"
